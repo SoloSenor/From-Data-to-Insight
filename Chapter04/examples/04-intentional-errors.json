@@ -1,0 +1,32 @@
+[
+  {
+    "id": "E01",
+    "code": "quantities = [3, 1, 4, 2]\nprint(quantities[4])\n",
+    "exception": "IndexError"
+  },
+  {
+    "id": "E02",
+    "code": "quantities = [3, 1, 4, 2]\nprint(quantities[::0])\n",
+    "exception": "ValueError"
+  },
+  {
+    "id": "E03",
+    "code": "order = {\"order_id\": \"O-0401\"}\nprint(order[\"shipping_toman\"])\n",
+    "exception": "KeyError"
+  },
+  {
+    "id": "E04",
+    "code": "bounds = (100_000, 300_000)\nbounds[0] = 90_000\n",
+    "exception": "TypeError"
+  },
+  {
+    "id": "E05",
+    "code": "orders = {{\"order_id\": \"O-0401\"}}\n",
+    "exception": "TypeError"
+  },
+  {
+    "id": "E06",
+    "code": "values = [240_000, \"80000\"]\nprint(sorted(values))\n",
+    "exception": "TypeError"
+  }
+]
