@@ -5,7 +5,7 @@
 ## E01 — `SyntaxError`
 
 ```python
-print(3 * 240_000
+print(3 * 240_000)
 ```
 
 ## E02 — `NameError`
