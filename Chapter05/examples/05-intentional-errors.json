@@ -1,0 +1,38 @@
+[
+  {
+    "id": "E01",
+    "title": "\u062f\u0648\u0646\u0642\u0637\u0647\u0654 \u0641\u0631\u0627\u0645\u0648\u0634\u200c\u0634\u062f\u0647",
+    "code": "if True\n    print(\"ready\")\n",
+    "exception": "SyntaxError"
+  },
+  {
+    "id": "E02",
+    "title": "\u0628\u062f\u0646\u0647\u0654 \u0628\u062f\u0648\u0646 \u062a\u0648\u0631\u0641\u062a\u06af\u06cc",
+    "code": "if True:\nprint(\"ready\")\n",
+    "exception": "IndentationError"
+  },
+  {
+    "id": "E03",
+    "title": "\u0622\u0631\u06af\u0648\u0645\u0627\u0646 \u0636\u0631\u0648\u0631\u06cc\u0650 \u062c\u0627\u0627\u0641\u062a\u0627\u062f\u0647",
+    "code": "def amount(quantity, unit_price_toman):\n    return quantity * unit_price_toman\n\namount(3)\n",
+    "exception": "TypeError"
+  },
+  {
+    "id": "E04",
+    "title": "\u0627\u0646\u062a\u0638\u0627\u0631 \u0639\u062f\u062f \u0627\u0632 \u062a\u0627\u0628\u0639 \u0646\u0645\u0627\u06cc\u0634\u06cc",
+    "code": "def show_amount():\n    print(100)\n\nresult = show_amount()\nprint(result + 1)\n",
+    "exception": "TypeError"
+  },
+  {
+    "id": "E05",
+    "title": "\u0627\u0633\u062a\u0641\u0627\u062f\u0647 \u0627\u0632 \u0646\u0627\u0645 \u0645\u062d\u0644\u06cc \u0628\u06cc\u0631\u0648\u0646 \u062a\u0627\u0628\u0639",
+    "code": "def calculate():\n    local_total = 100\n    return local_total\n\ncalculate()\nprint(local_total)\n",
+    "exception": "NameError"
+  },
+  {
+    "id": "E06",
+    "title": "\u0622\u0632\u0645\u0648\u0646\u06cc \u06a9\u0647 \u0648\u0627\u0642\u0639\u0627\u064b \u0634\u06a9\u0633\u062a \u0645\u06cc\u200c\u062e\u0648\u0631\u062f",
+    "code": "def discount_for(amount_toman):\n    if amount_toman >= 1_000_000:\n        return 100_000\n    if amount_toman >= 500_000:\n        return 50_000\n    return 0\n\nassert discount_for(500_000) == 0\n",
+    "exception": "AssertionError"
+  }
+]
