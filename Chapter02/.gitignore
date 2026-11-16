@@ -1,0 +1,16 @@
+# Environments and generated files
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Local environment notes may contain private paths
+environment-notes.local.txt
+
+# Notebook outputs and arbitrary personal data need manual review.
+# This file cannot protect secrets already committed to Git.
