@@ -1,0 +1,37 @@
+test_01_dataset_structure (test_chapter07.Chapter07Tests.test_01_dataset_structure) ... ok
+test_02_dataset_literal_matches_json (test_chapter07.Chapter07Tests.test_02_dataset_literal_matches_json) ... ok
+test_03_fixed_totals (test_chapter07.Chapter07Tests.test_03_fixed_totals) ... ok
+test_04_fixed_group_ranking (test_chapter07.Chapter07Tests.test_04_fixed_group_ranking) ... ok
+test_05_shares (test_chapter07.Chapter07Tests.test_05_shares) ... ok
+test_06_every_row_independent_oracle (test_chapter07.Chapter07Tests.test_06_every_row_independent_oracle) ... ok
+test_07_no_input_mutation (test_chapter07.Chapter07Tests.test_07_no_input_mutation) ... ok
+test_08_empty_input (test_chapter07.Chapter07Tests.test_08_empty_input) ... ok
+test_09_all_returned (test_chapter07.Chapter07Tests.test_09_all_returned) ... ok
+test_10_zero_price_not_full_return (test_chapter07.Chapter07Tests.test_10_zero_price_not_full_return) ... ok
+test_11_added_order (test_chapter07.Chapter07Tests.test_11_added_order) ... ok
+test_12_reordered_input (test_chapter07.Chapter07Tests.test_12_reordered_input) ... ok
+test_13_tie_break (test_chapter07.Chapter07Tests.test_13_tie_break) ... ok
+test_14_duplicate_id_rejected (test_chapter07.Chapter07Tests.test_14_duplicate_id_rejected) ... ok
+test_15_index_references_originals (test_chapter07.Chapter07Tests.test_15_index_references_originals) ... ok
+test_16_random_small_valid_orders (test_chapter07.Chapter07Tests.test_16_random_small_valid_orders) ... ok
+test_17_full_and_partial_returns (test_chapter07.Chapter07Tests.test_17_full_and_partial_returns) ... ok
+test_18_copy_semantics (test_chapter07.Chapter07Tests.test_18_copy_semantics) ... ok
+test_19_zip_lazy_strict_and_exhaustion (test_chapter07.Chapter07Tests.test_19_zip_lazy_strict_and_exhaustion) ... ok
+test_20_stable_sort_and_record_sharing (test_chapter07.Chapter07Tests.test_20_stable_sort_and_record_sharing) ... ok
+test_21_silent_logic_bugs (test_chapter07.Chapter07Tests.test_21_silent_logic_bugs) ... ok
+test_22_all_30_examples_exact (test_chapter07.Chapter07Tests.test_22_all_30_examples_exact) ... ok
+test_23_all_8_answers_exact (test_chapter07.Chapter07Tests.test_23_all_8_answers_exact) ... ok
+test_24_text_catalog_matches (test_chapter07.Chapter07Tests.test_24_text_catalog_matches) ... ok
+test_25_six_intentional_errors (test_chapter07.Chapter07Tests.test_25_six_intentional_errors) ... ok
+test_26_ascii_and_compilation (test_chapter07.Chapter07Tests.test_26_ascii_and_compilation) ... ok
+test_27_notebook_unexecuted_and_matches (test_chapter07.Chapter07Tests.test_27_notebook_unexecuted_and_matches) ... ok
+test_28_teaching_script_subprocess (test_chapter07.Chapter07Tests.test_28_teaching_script_subprocess) ... ok
+test_29_answer_script_subprocess (test_chapter07.Chapter07Tests.test_29_answer_script_subprocess) ... ok
+test_30_runner_from_other_directory (test_chapter07.Chapter07Tests.test_30_runner_from_other_directory) ... ok
+test_31_local_readme_links (test_chapter07.Chapter07Tests.test_31_local_readme_links) ... ok
+test_32_declared_non_validator_limit (test_chapter07.Chapter07Tests.test_32_declared_non_validator_limit) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 4.794s
+
+OK
