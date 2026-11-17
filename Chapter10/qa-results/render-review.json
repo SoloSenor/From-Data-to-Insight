@@ -1,0 +1,17 @@
+{
+  "status": "PASS_WITH_SCOPE_LIMITS",
+  "renderer": "LibreOffice 7.4",
+  "rendered_pages": 34,
+  "sample_pages_visually_reviewed": [
+    1,
+    8,
+    16,
+    22,
+    29,
+    34
+  ],
+  "sample_findings": "Persian text readable; code and output LTR and monospace; no clipping seen on sampled pages.",
+  "all_pages_visually_reviewed": false,
+  "microsoft_word_application_tested": false,
+  "pdf_role": "Temporary preview for quality review; not the official Word pagination."
+}

@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "python_tests": 108,
+  "real_jupyter_teaching_cells": 30,
+  "notebook_result": {
+    "status": "PASS",
+    "matched_teaching_code_cells": 30,
+    "extra_environment_probe_cells": 1,
+    "kernel": {
+      "python": "3.11.16",
+      "executable": "/usr/local/bin/python",
+      "platform": "Linux-4.19.0-gvisor-x86_64-with-glibc2.36"
+    },
+    "runner_python": "3.11.16",
+    "runner_executable": "/usr/local/bin/python",
+    "packages": {
+      "nbformat": "5.10.4",
+      "nbclient": "0.11.0",
+      "jupyter_client": "8.10.0",
+      "ipykernel": "6.30.0"
+    },
+    "published_notebook_unchanged": true,
+    "browser_tested": false
+  },
+  "project_entry_output_matched": true,
+  "checked_manifest_entries_before_release_report": 67,
+  "tested_extracted_files_unchanged_during_execution": true,
+  "archive_repacked_only_to_add_release_evidence": true
+}
