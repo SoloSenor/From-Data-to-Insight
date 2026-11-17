@@ -1,0 +1,58 @@
+[
+  {
+    "id": "5",
+    "title": "تابع تعداد نگه‌داشته‌شده",
+    "code": "def retained_units(quantity, returned_quantity=0):\n    return quantity - returned_quantity\n\nprint(retained_units(5, 1))\nprint(retained_units(5))\n",
+    "output": "4\n5\n",
+    "explanation": "ورودی معتبر مفروض است؛ این تابع مرجوعی بیشتر از تعداد را اعتبارسنجی نمی‌کند."
+  },
+  {
+    "id": "6",
+    "title": "پارامتر فقط کلیدی",
+    "code": "def kept_amount(quantity, price, *, returned=0):\n    return (quantity - returned) * price\n\nprint(kept_amount(2, 450000, returned=1))\n",
+    "output": "450000\n",
+    "explanation": "گزینهٔ returned با نام ارسال می‌شود؛ پیش‌فرض آن صفر است."
+  },
+  {
+    "id": "7",
+    "title": "حذف وابستگی سراسری",
+    "code": "def share_of_total(amount, denominator):\n    return None if denominator == 0 else amount / denominator\n\nprint(share_of_total(25, 100))\nprint(share_of_total(0, 0))\n",
+    "output": "0.25\nNone\n",
+    "explanation": "مخرج به‌صورت ورودی صریح است. None با صفر فرق دارد و علامت تعریف‌نشدن سهم در قرارداد این تابع است."
+  },
+  {
+    "id": "8",
+    "title": "پیش‌فرض مستقل و حفظ ورودی",
+    "code": "def with_note(note, notes=None):\n    result = [] if notes is None else notes.copy()\n    result.append(note)\n    return result\n\nsource = [\"old\"]\nprint(with_note(\"A\"))\nprint(with_note(\"B\"))\nprint(with_note(\"new\", source))\nprint(source)\n",
+    "output": "['A']\n['B']\n['old', 'new']\n['old']\n",
+    "explanation": "کپی کم‌عمق برای رشته‌های این مثال کافی است. صرف انتخاب None بدون کپی، حفظ فهرست بیرونی را تضمین نمی‌کرد."
+  },
+  {
+    "id": "9",
+    "title": "تابع مستند و دارای راهنمای نوع",
+    "code": "def retained_value(quantity: int, price: int, returned: int = 0) -> int:\n    \"\"\"Return retained value in toman for valid integer inputs.\"\"\"\n    return (quantity - returned) * price\n\nprint(retained_value.__doc__)\nprint(retained_value(2, 450000, 1))\n",
+    "output": "Return retained value in toman for valid integer inputs.\n450000\n",
+    "explanation": "annotation قرارداد را شرح می‌دهد، ولی پیش‌شرط‌های عددی را در زمان اجرا تحمیل نمی‌کند."
+  },
+  {
+    "id": "10",
+    "title": "فیلتر نمایشی بدون تغییر داده",
+    "code": "def visible_groups(groups, *, minimum=0):\n    return [group.copy() for group in groups\n            if group[\"retained_toman\"] >= minimum]\n\ngroups = [{\"category\": \"Digital\", \"retained_toman\": 2450000},\n          {\"category\": \"Books\", \"retained_toman\": 690000},\n          {\"category\": \"Stationery\", \"retained_toman\": 450000}]\nselected = visible_groups(groups, minimum=500000)\nprint([group[\"category\"] for group in selected])\nprint(len(groups))\n",
+    "output": "['Digital', 'Books']\n3\n",
+    "explanation": "فیلتر، اعضای ورودی را حذف نکرده است. اگر share هم موجود باشد، با کپی رکورد ثابت می‌ماند و بر مبنای گروه‌های نمایشی دوباره محاسبه نمی‌شود."
+  },
+  {
+    "id": "11",
+    "title": "جمع‌کردن محاسبه بدون چاپ میانی",
+    "code": "def order_total(rows):\n    return sum((row[\"quantity\"] - row[\"returned_quantity\"])\n               * row[\"unit_price_toman\"] for row in rows)\n\nprint(order_total(orders))\nprint(order_total([]))\n",
+    "output": "3590000\n0\n",
+    "explanation": "تابع خالی نیز پاسخ قراردادی صفر دارد و فایل، صفحه یا دادهٔ بیرونی را تغییر نمی‌دهد."
+  },
+  {
+    "id": "12",
+    "title": "یک تابع قالب‌بندی و یک تابع نمایش",
+    "code": "def summary_text(total: int) -> str:\n    return f\"retained_toman {total}\"\n\ndef display_summary(total: int) -> None:\n    print(summary_text(total))\n\ntext = summary_text(3590000)\nprint(text == \"retained_toman 3590000\")\ndisplay_summary(3590000)\n",
+    "output": "True\nretained_toman 3590000\n",
+    "explanation": "متن را می‌توان مستقل از چاپ آزمود. None در راهنمای نوع تابع نمایش، نبود نتیجهٔ محاسباتی را روشن می‌کند؛ اثر جانبی چاپ همچنان وجود دارد."
+  }
+]

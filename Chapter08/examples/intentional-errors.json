@@ -1,0 +1,38 @@
+[
+  {
+    "id": "missing-argument",
+    "code": "def f(quantity, price):\n    return quantity * price\nf(2)\n",
+    "exception": "TypeError",
+    "explanation": "ورودی لازم حذف شده است؛ پیش‌فرض فقط برای پارامتری به کار می‌رود که در تعریف پیش‌فرض دارد."
+  },
+  {
+    "id": "duplicate-argument",
+    "code": "def f(quantity, price):\n    return quantity * price\nf(2, quantity=3, price=100)\n",
+    "exception": "TypeError",
+    "explanation": "یک پارامتر هم موقعیتی و هم کلیدی مقدار گرفته است."
+  },
+  {
+    "id": "keyword-only",
+    "code": "def f(value, *, minimum=0):\n    return value >= minimum\nf(10, 5)\n",
+    "exception": "TypeError",
+    "explanation": "پارامتر پس از ستارهٔ تنها باید با نام ارسال شود."
+  },
+  {
+    "id": "unbound-local",
+    "code": "count = 10\ndef f():\n    count = count + 1\n    return count\nf()\n",
+    "exception": "UnboundLocalError",
+    "explanation": "انتساب باعث محلی‌بودن نام در همین تابع شده است؛ پیش از آنکه مقدار محلی موجود باشد خوانده شده است. بهتر است مقدار ورودی و خروجی صریح باشد."
+  },
+  {
+    "id": "attribute-not-callable",
+    "code": "value = complex(3, 4)\nvalue.real()\n",
+    "exception": "TypeError",
+    "explanation": "real در این مثال عدد است، نه متد قابل‌فراخوانی."
+  },
+  {
+    "id": "missing-module",
+    "code": "import chapter08_module_that_does_not_exist\n",
+    "exception": "ModuleNotFoundError",
+    "explanation": "نام ماژول پیدا نشده است؛ در کاربرد واقعی املای نام، محیط و محل اجرای فرمان را بررسی کنید. مدیریت تفصیلی خطا در فصل نهم می‌آید."
+  }
+]

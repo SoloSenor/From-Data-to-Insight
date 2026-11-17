@@ -1,0 +1,242 @@
+[
+  {
+    "id": "01",
+    "title": "تعریف، فراخوانی و مقدار بازگشتی",
+    "intro": "تعریف تابع دستور محاسبه را آماده می‌کند؛ فقط فراخوانی آن محاسبه را انجام می‌دهد.",
+    "code": "def amount(quantity, unit_price_toman):\n    return quantity * unit_price_toman\n\nresult = amount(2, 120000)\nprint(result)\n",
+    "output": "240000\n",
+    "after": "در تعریف، quantity و unit_price_toman پارامترند؛ در فراخوانی، 2 و 120000 آرگومان‌اند. result نتیجهٔ فراخوانی را می‌گیرد. بدنۀ تابع با چهار فاصله تورفته است. return نتیجه را به فراخواننده تحویل می‌دهد، نه اینکه آن را الزاماً روی صفحه نمایش دهد."
+  },
+  {
+    "id": "02",
+    "title": "چاپ با بازگرداندن یکی نیست",
+    "intro": "تابعی که فقط چاپ می‌کند، محاسبه را برای استفادهٔ بعدی تحویل نمی‌دهد.",
+    "code": "def show_amount(quantity, unit_price_toman):\n    print(quantity * unit_price_toman)\n\nresult = show_amount(2, 120000)\nprint(result)\n",
+    "output": "240000\nNone\n",
+    "after": "خط اول از داخل تابع چاپ شده است؛ خط دوم مقدار بازگشتی واقعی را نشان می‌دهد. رسیدن به پایان تابع بدون return، مقدار None برمی‌گرداند. این رفتار خطای اجرایی نیست، اما اگر بخواهیم نتیجه را جمع کنیم به مشکل می‌خوریم. چاپ را در مرز نمایش نگه می‌داریم."
+  },
+  {
+    "id": "03",
+    "title": "بازگرداندن چند نتیجه در یک تاپل",
+    "intro": "سه مبلغ را با یک فراخوانی محاسبه می‌کنیم.",
+    "code": "def amounts(quantity, unit_price_toman, returned_quantity=0):\n    gross = quantity * unit_price_toman\n    refund = returned_quantity * unit_price_toman\n    return gross, refund, gross - refund\n\ngross, refund, retained = amounts(2, 450000, 1)\nprint(gross, refund, retained)\n",
+    "output": "900000 450000 450000\n",
+    "after": "تابع در واقع یک شیء تاپل برمی‌گرداند و سمت چپ آن را باز می‌کند. ترتیب سه مؤلفه بخشی از قرارداد است. برای نتیجه‌های بسیار زیاد یا نام‌محور، دیکشنری می‌تواند روشن‌تر باشد. مقدار باقی‌مانده سود نیست؛ هزینه‌ها در این سناریو وجود ندارند."
+  },
+  {
+    "id": "04",
+    "title": "آرگومان کلیدی برای کاهش اشتباه",
+    "intro": "کلیدها نقش عددها را آشکار می‌کنند، به‌ویژه وقتی چند عدد هم‌نوع داریم.",
+    "code": "print(amounts(returned_quantity=1, unit_price_toman=450000,\n              quantity=2))\nprint(amounts(2, unit_price_toman=450000, returned_quantity=1))\n",
+    "output": "(900000, 450000, 450000)\n(900000, 450000, 450000)\n",
+    "after": "پارامترهای معمولی این تابع هم موقعیتی و هم با نام پذیرفته می‌شوند. «پارامتر پیش‌فرض‌دار» لزوماً «فقط کلیدی» نیست. در فراخوانی ساده، آرگومان‌های موقعیتی را قبل از کلیدی‌ها می‌نویسیم و به یک پارامتر دوبار مقدار نمی‌دهیم."
+  },
+  {
+    "id": "05",
+    "title": "پیش‌فرض، فقط در صورت حذف آرگومان",
+    "intro": "حذف تعداد مرجوعی یعنی استفاده از صفر قراردادی؛ مقدار صریح جای پیش‌فرض را می‌گیرد.",
+    "code": "print(amounts(2, 450000))\nprint(amounts(2, 450000, returned_quantity=2))\n",
+    "output": "(900000, 0, 900000)\n(900000, 900000, 0)\n",
+    "after": "صفر در اینجا تصمیم مدل آموزشی است، نه درمان خودکار دادهٔ گمشده. اگر مقدار مرجوعی واقعاً نامعلوم باشد، نباید بی‌دلیل آن را صفر کنیم. پیش‌فرض‌ها باید معنای تجاری روشن داشته باشند."
+  },
+  {
+    "id": "06",
+    "title": "پارامتر فقط کلیدی",
+    "intro": "علامت ستارهٔ تنها، پارامترهای پس از خود را فقط کلیدی می‌کند.",
+    "code": "def meets_minimum(value, *, minimum=0):\n    return value >= minimum\n\nprint(meets_minimum(450000, minimum=500000))\nprint(meets_minimum(690000, minimum=500000))\n",
+    "output": "False\nTrue\n",
+    "after": "ستاره در این تعریف نه ضرب است و نه جمع‌آوری آرگومان؛ مرز قراردادیِ نحوهٔ فراخوانی است. فراخوانی meets_minimum(450000, 500000) خطای TypeError دارد. این الگو برای گزینه‌های نمایش که ممکن است با عدد اصلی اشتباه شوند مفید است."
+  },
+  {
+    "id": "07",
+    "title": "بازکردن آرگومان‌های موقعیتی",
+    "intro": "یک تاپل سه‌عضوی را به سه آرگومان تبدیل می‌کنیم.",
+    "code": "values = (2, 450000, 1)\nprint(amounts(*values))\n",
+    "output": "(900000, 450000, 450000)\n",
+    "after": "ستاره در محل فراخوانی اعضای یک iterable را باز می‌کند. بدون ستاره، یک تاپل به‌عنوان یک آرگومان فرستاده می‌شد. تعداد و ترتیب اعضا باید با قرارداد تابع جور باشد؛ کوتاه‌شدن کد، کنترل معنا را حذف نمی‌کند."
+  },
+  {
+    "id": "08",
+    "title": "بازکردن آرگومان‌های کلیدی",
+    "intro": "دیکشنری می‌تواند گزینه‌های یک فراخوانی را نگه دارد.",
+    "code": "options = {\"quantity\": 2, \"unit_price_toman\": 450000,\n           \"returned_quantity\": 1}\nprint(amounts(**options))\n",
+    "output": "(900000, 450000, 450000)\n",
+    "after": "دو ستاره در محل فراخوانی، کلیدها را به نام آرگومان تبدیل می‌کند. کلید ناشناخته یا مقداردهی دوباره به همان پارامتر خطاست. هر دیکشنریِ رکورد را بی‌بررسی با این روش نفرستید؛ ممکن است فیلدهای اضافی داشته باشد."
+  },
+  {
+    "id": "09",
+    "title": "تعداد متغیر آرگومان‌های موقعیتی",
+    "intro": "گاهی تعداد ورودی‌ها از پیش معلوم نیست؛ این قابلیت را با قرارداد صریح به کار می‌بریم.",
+    "code": "def total_amount(*values):\n    return sum(values)\n\nprint(total_amount(240000, 450000, 300000))\nprint(total_amount())\n",
+    "output": "990000\n0\n",
+    "after": "در تعریف، *values آرگومان‌های موقعیتی را در یک تاپل جمع می‌کند؛ نام args اجباری نیست. جمع ورودی خالی برای این تابع صفر است. برای تابع اصلی گزارش که فهرست رکوردها را می‌گیرد، استفاده از این قابلیت ضرورتی ندارد."
+  },
+  {
+    "id": "10",
+    "title": "تعداد متغیر آرگومان‌های کلیدی",
+    "intro": "برای شناخت امضای کتابخانه‌ها، جمع‌آوری کلیدها را نیز می‌بینیم.",
+    "code": "def field_names(**fields):\n    return sorted(fields)\n\nprint(field_names(order_id=\"A\", category=\"Books\"))\n",
+    "output": "['category', 'order_id']\n",
+    "after": "درون تابع، fields دیکشنری است. **kwargs نام متعارف همین الگوست، نه کلمهٔ رزروشده. پذیرش هر کلید به معنی معتبر بودن معنای آن نیست؛ اگر گزینه‌های تابع معلوم‌اند، پارامتر صریح معمولاً خواناتر و قابل‌کنترل‌تر است."
+  },
+  {
+    "id": "11",
+    "title": "دامنهٔ محلی و هم‌نامی",
+    "intro": "نام یکسان در دو دامنه الزاماً به یک متغیر محلی مشترک اشاره نمی‌کند.",
+    "code": "label = \"global\"\ndef local_label():\n    label = \"local\"\n    return label\n\nprint(local_label())\nprint(label)\n",
+    "output": "local\nglobal\n",
+    "after": "انتساب label در تابع، نام محلی می‌سازد و اتصال بیرونی را تغییر نمی‌دهد. این موضوع با تغییر محتوای یک فهرست مشترک متفاوت است. برای تغییر اتصال سراسری باید صریحاً global به کار رود؛ این فصل به‌جای تکیه بر آن، ورودی و خروجی روشن را توصیه می‌کند."
+  },
+  {
+    "id": "12",
+    "title": "دامنهٔ دربرگیرنده",
+    "intro": "جست‌وجوی نام فقط محلی و سراسری نیست؛ تابع تودرتو می‌تواند نام دامنهٔ بیرونی خود را بخواند.",
+    "code": "def outer():\n    label = \"enclosing\"\n    def inner():\n        return label\n    return inner()\n\nprint(outer())\n",
+    "output": "enclosing\n",
+    "after": "در توابع معمول، الگوی ذهنی LEGB یعنی محلی، دربرگیرنده، سراسریِ ماژول و داخلی پایتون. این خلاصه همهٔ جزئیات کلاس‌ها یا مدل‌های پیشرفتهٔ دامنه نیست. برای خواندن نام لازم نیست global یا nonlocal بنویسیم؛ این دو برای تغییر اتصال نام در دامنهٔ دیگر مطرح می‌شوند."
+  },
+  {
+    "id": "13",
+    "title": "وابستگی پنهان به وضعیت سراسری",
+    "intro": "تابع می‌تواند بدون تغییر آرگومان، پس از تغییر یک متغیر بیرونی نتیجهٔ دیگری بدهد.",
+    "code": "unit_price = 120000\ndef hidden_amount(quantity):\n    return quantity * unit_price\n\nprint(hidden_amount(2))\nunit_price = 150000\nprint(hidden_amount(2))\nprint(amount(2, 120000))\n",
+    "output": "240000\n300000\n240000\n",
+    "after": "دو فراخوانی نخست ورودی صریح یکسان ولی وابستگی پنهان متفاوت دارند. تابع amount قیمت را صریح می‌گیرد و وابستگی را آشکار می‌کند. خواندن یک ثابت ماژول همیشه بد نیست؛ مشکل وقتی است که وضعیت تغییرپذیرِ پنهان، بازتولید و آزمون را دشوار کند."
+  },
+  {
+    "id": "14",
+    "title": "انتساب دوباره به پارامتر",
+    "intro": "بازبستن نام محلی عدد، نام فراخواننده را عوض نمی‌کند.",
+    "code": "def replace_quantity(quantity):\n    quantity = 99\n    return quantity\n\nquantity = 2\nprint(replace_quantity(quantity))\nprint(quantity)\n",
+    "output": "99\n2\n",
+    "after": "پارامتر ابتدا به همان شیء آرگومان متصل می‌شود؛ این اتصال کپی عمیق نمی‌سازد. سپس انتسابِ عدد جدید، اتصال محلی را عوض می‌کند. عبارت «پایتون همیشه ورودی را کپی می‌کند» نادرست است؛ رفتار تغییر ظرف را در مثال بعد مقایسه کنید."
+  },
+  {
+    "id": "15",
+    "title": "تغییر ظرف ورودی در برابر ساخت نتیجهٔ تازه",
+    "intro": "تفاوت دو تابع در اثر جانبی است، نه صرفاً شکل return.",
+    "code": "def add_in_place(values, value):\n    values.append(value)\n\ndef added(values, value):\n    return values + [value]\n\nsource = [10]\nprint(add_in_place(source, 20))\nprint(source)\nprint(added(source, 30))\nprint(source)\n",
+    "output": "None\n[10, 20]\n[10, 20, 30]\n[10, 20]\n",
+    "after": "تابع نخست ورودی را تغییر می‌دهد و None برمی‌گرداند؛ تابع دوم فهرست بیرونی تازه می‌سازد. برای عضوهای تو‌در‌تو، فهرست تازه به معنی کپی عمیق نیست. تغییر درجا می‌تواند انتخاب درست و کارآمدی باشد، به شرط نام‌گذاری، مستندسازی و انتظار روشن فراخواننده."
+  },
+  {
+    "id": "16",
+    "title": "دام پیش‌فرض تغییرپذیر",
+    "intro": "این مثال عمداً رفتار نامطلوب دارد ولی استثنا نمی‌دهد.",
+    "code": "def remember_bad(value, items=[]):\n    items.append(value)\n    return items\n\nprint(remember_bad(\"A\"))\nprint(remember_bad(\"B\"))\n",
+    "output": "['A']\n['A', 'B']\n",
+    "after": "فهرست پیش‌فرض هنگام اجرای def ساخته شده و میان فراخوانی‌ها مشترک است. اینجا def یک بار اجرا شده است؛ هر اجرای دوبارهٔ تعریف، پیش‌فرض تازه‌ای می‌سازد و ممکن است عیب را در دفترچه پنهان کند. برای بررسی، دو فراخوانی پی‌درپی پس از یک تعریف لازم است."
+  },
+  {
+    "id": "17",
+    "title": "پیش‌فرض امن و قرارداد مالکیت",
+    "intro": "در این نسخه، حتی فهرستِ داده‌شده از بیرون هم تغییر نمی‌کند.",
+    "code": "def remembered(value, items=None):\n    result = [] if items is None else items.copy()\n    result.append(value)\n    return result\n\nprint(remembered(\"A\"))\nprint(remembered(\"B\"))\nsource = [\"old\"]\nprint(remembered(\"new\", source))\nprint(source)\n",
+    "output": "['A']\n['B']\n['old', 'new']\n['old']\n",
+    "after": "الگوی None فقط مشکل پیش‌فرض مشترک را حل می‌کند؛ حفظ فهرستِ صریح بیرونی حاصل copy در این نسخه است. اگر items را مستقیم تغییر می‌دادیم، فراخواننده هنوز تغییر را می‌دید. شرط is None دقیق‌تر از if not items است، چون فهرست خالیِ صریح را با نبود آرگومان یکی نمی‌کند."
+  },
+  {
+    "id": "18",
+    "title": "زمان ارزیابی پیش‌فرض",
+    "intro": "پیش‌فرض معمولاً با هر فراخوانی از روی مقدار فعلی یک متغیر دوباره محاسبه نمی‌شود.",
+    "code": "limit = 10\ndef configured_limit(value=limit):\n    return value\n\nlimit = 20\nprint(configured_limit())\nprint(configured_limit(limit))\n",
+    "output": "10\n20\n",
+    "after": "ارزیابی هنگام اجرای تعریف انجام شده است. این نکته برای تاریخ جاری، عدد تصادفی، اتصال منبع و تنظیماتِ تغییرپذیر مهم است. برای محاسبهٔ تازه، ورودی را صریح بفرستید یا مقدار مناسب را در بدنۀ تابع بسازید؛ پیش‌فرضِ فراخوانی یک تابع هم هنگام تعریف ارزیابی می‌شود."
+  },
+  {
+    "id": "19",
+    "title": "مستندسازی قرارداد با docstring",
+    "intro": "نخستین رشتهٔ بدنۀ تابع مستند آن است و ابزارها می‌توانند آن را بخوانند.",
+    "code": "def net_units(quantity, returned_quantity=0):\n    \"\"\"Return retained units for a valid single-item order.\"\"\"\n    return quantity - returned_quantity\n\nprint(net_units.__doc__)\nprint(net_units(5, 1))\n",
+    "output": "Return retained units for a valid single-item order.\n4\n",
+    "after": "مستند فقط بازگویی نام تابع نیست: واحد، پیش‌شرط، خروجی، اثر جانبی و محدودیت باید روشن باشند. راهنمای مفصل فارسی در متن کتاب قرار می‌گیرد؛ docstring داخل کد طبق قرارداد کتاب انگلیسی است. help نیز راهنما را نمایش می‌دهد، اما خروجی طولانی و وابسته به محیط آن را جزو خروجی مرجع نکرده‌ایم."
+  },
+  {
+    "id": "20",
+    "title": "راهنمای نوع، اعتبارسنج خودکار نیست",
+    "intro": "annotation به انسان و ابزار تحلیل ایستا کمک می‌کند، ولی به‌خودی‌خود ورودی را کنترل نمی‌کند.",
+    "code": "def identity_number(value: int) -> int:\n    return value\n\nprint(identity_number(10))\nprint(identity_number(\"not checked\"))\n",
+    "output": "10\nnot checked\n",
+    "after": "فراخوانی دوم عمداً خلاف قرارداد نوع نوشته شده است تا نبود کنترل خودکار را نشان دهد. ابزار type checker ممکن است آن را رد کند، اما در این فصل چنین ابزاری اجرا نشده است. راهنمای نوع، docstring و اعتبارسنج زمان اجرا سه لایهٔ متفاوت‌اند. خطای منطقی همچنان با annotation ممکن است."
+  },
+  {
+    "id": "21",
+    "title": "تابع به‌عنوان ورودی تابع",
+    "intro": "می‌توان خود تابع را فرستاد، نه نتیجهٔ اجرای آن را.",
+    "code": "def apply_amount(quantity, price, calculator):\n    return calculator(quantity, price)\n\nprint(apply_amount(2, 120000, amount))\n",
+    "output": "240000\n",
+    "after": "در فراخوانیِ بیرونی amount بدون پرانتز فرستاده شده است. پرانتزِ اجرای واقعی درون apply_amount قرار دارد. این الگو مقدمهٔ فهم key در sorted و توابع تبدیلی کتابخانه‌هاست؛ برای هر محاسبهٔ کوچک لازم نیست تابعِ دریافت‌کنندهٔ تابع طراحی کنیم."
+  },
+  {
+    "id": "22",
+    "title": "دو شکل واردکردن از کتابخانهٔ استاندارد",
+    "intro": "واردکردن ماژول و واردکردن نام مشخص، هر دو متعارف‌اند.",
+    "code": "import math\nfrom statistics import mean as average\n\nprint(math.isclose(0.1 + 0.2, 0.3))\nprint(average([10, 20, 30]))\n",
+    "output": "True\n20\n",
+    "after": "math نام ماژول را نگه می‌دارد و منشأ isclose آشکار است؛ average نام مستعار mean است. برای مقایسهٔ اعشاری از بررسی تقریبی استفاده شده است، نه ادعای برابری دقیق. mean در این محیط برای این ورودی صحیح 20 برمی‌گرداند؛ نباید از نام میانگین نتیجه گرفت نوع خروجی همیشه float است."
+  },
+  {
+    "id": "23",
+    "title": "شیء، ویژگی و متد بدون ساخت کلاس",
+    "intro": "برای فهم کتابخانه‌ها فعلاً لازم نیست کلاس بنویسیم؛ کافی است عضوهای یک شیء را بخوانیم و متد آن را فراخوانی کنیم.",
+    "code": "value = complex(3, 4)\nprint(value.real)\nprint(value.imag)\nprint(value.conjugate())\n",
+    "output": "3.0\n4.0\n(3-4j)\n",
+    "after": "real و imag ویژگی‌اند و بدون پرانتز خوانده می‌شوند؛ conjugate متدی است که با پرانتز اجرا می‌شود. هر ویژگی قابل‌فراخوانی نیست و هر متد هم الزاماً شیء را تغییر نمی‌دهد. این متد نتیجهٔ تازه می‌دهد؛ مثال بعد متدی تغییر‌دهنده را نشان می‌دهد."
+  },
+  {
+    "id": "24",
+    "title": "متد تغییر‌دهنده و نتیجهٔ آن",
+    "intro": "آشنایی با نقطه و پرانتز کافی نیست؛ باید قرارداد خروجی متد را هم بدانیم.",
+    "code": "values = [30, 10, 20]\nresult = values.sort()\nprint(values)\nprint(result)\n",
+    "output": "[10, 20, 30]\nNone\n",
+    "after": "sort ترتیب همان فهرست را تغییر می‌دهد و None برمی‌گرداند. نوشتن values = values.sort() نام values را به None می‌بندد و دسترسی معمول به فهرست را از بین می‌برد. پیش از زنجیره‌کردن چند متد، نوع نتیجهٔ هر مرحله را بررسی کنید؛ همهٔ متدها برای زنجیره‌سازی طراحی نشده‌اند."
+  },
+  {
+    "id": "25",
+    "title": "خود تابع در برابر نتیجهٔ تابع",
+    "intro": "قابل‌فراخوانی‌بودن یک مقدار با نتیجهٔ فراخوانی فرق دارد.",
+    "code": "calculator = amount\nprint(callable(calculator))\nprint(calculator.__name__)\nprint(calculator(2, 120000))\n",
+    "output": "True\namount\n240000\n",
+    "after": "انتساب تابع، محاسبه را اجرا نکرده است. چاپ خود شیء تابع معمولاً جزئیات و آدرس وابسته به اجرا نشان می‌دهد، به همین دلیل در کتاب از نام و رفتار قابل‌بازتولید استفاده می‌کنیم. تابع هم یک شیء است؛ صفت __name__ را می‌توان خواند."
+  },
+  {
+    "id": "26",
+    "title": "خواندن امضای تابع",
+    "intro": "امضا نقشۀ کوتاهِ نحوهٔ فراخوانی است، نه جایگزین مستند معنایی.",
+    "code": "from inspect import signature\n\ndef priced(quantity: int, unit_price_toman: int = 100) -> int:\n    return quantity * unit_price_toman\n\nprint(signature(priced))\n",
+    "output": "(quantity: int, unit_price_toman: int = 100) -> int\n",
+    "after": "قبل از علامت پیکان، ورودی‌ها و پیش‌فرض دیده می‌شوند؛ پس از آن، راهنمای نوع نتیجه است. از این امضا نمی‌فهمیم قیمت تومان است یا ریال مگر نام و مستند کمک کنند. ما از future annotations استفاده نکرده‌ایم؛ نمایش annotation در تنظیمات یا نسخه‌های دیگر ممکن است متفاوت باشد."
+  },
+  {
+    "id": "27",
+    "title": "ماژول هم فضای نام دارد",
+    "intro": "نام ماژول و نام تابع درون آن را می‌توان جداگانه شناخت.",
+    "code": "import statistics as stats\n\nprint(stats.__name__)\nprint(stats.mean.__name__)\nprint(callable(stats.mean))\n",
+    "output": "statistics\nmean\nTrue\n",
+    "after": "نام مستعار stats اسم اصلی ماژول را عوض نمی‌کند؛ فقط نامی محلی برای دسترسی به آن می‌سازد. از import * پرهیز می‌کنیم تا منشأ نام‌ها پنهان نشود. فایل شخصی خود را statistics.py یا math.py ننامید؛ ممکن است ماژول استاندارد را بپوشاند."
+  },
+  {
+    "id": "28",
+    "title": "محاسبهٔ تکرارپذیر با ورودی صریح",
+    "intro": "برای تابع محاسباتیِ بدون وابستگی پنهان، تکرار ورودی باید نتیجهٔ برابر بدهد.",
+    "code": "first = amounts(2, 450000, 1)\nsecond = amounts(2, 450000, 1)\nprint(first == second)\nprint(first)\n",
+    "output": "True\n(900000, 450000, 450000)\n",
+    "after": "این مثال شاهد رفتار همین تابع است، نه تعریف جامع تضمین تکرارپذیری همهٔ نرم‌افزار. ساعت، تصادف، شبکه، وضعیت بیرونی و تغییر ورودی می‌توانند نتیجه را عوض کنند. هستهٔ محاسباتی را تا حد ممکن از این وابستگی‌ها جدا می‌کنیم."
+  },
+  {
+    "id": "29",
+    "title": "کنترل مستقل کل مبلغ",
+    "intro": "پیش از رفتن به چند فایل، همان دادهٔ تثبیت‌شده را در دفترچه می‌سازیم.",
+    "code": "orders = [\n    {'order_id': 'O001', 'order_date': '2026-10-01', 'category': 'Books', 'quantity': 2, 'unit_price_toman': 120000, 'returned_quantity': 0},\n    {'order_id': 'O002', 'order_date': '2026-10-01', 'category': 'Digital', 'quantity': 1, 'unit_price_toman': 800000, 'returned_quantity': 0},\n    {'order_id': 'O003', 'order_date': '2026-10-02', 'category': 'Stationery', 'quantity': 5, 'unit_price_toman': 30000, 'returned_quantity': 1},\n    {'order_id': 'O004', 'order_date': '2026-10-02', 'category': 'Books', 'quantity': 1, 'unit_price_toman': 200000, 'returned_quantity': 1},\n    {'order_id': 'O005', 'order_date': '2026-10-03', 'category': 'Digital', 'quantity': 2, 'unit_price_toman': 450000, 'returned_quantity': 1},\n    {'order_id': 'O006', 'order_date': '2026-10-03', 'category': 'Stationery', 'quantity': 3, 'unit_price_toman': 50000, 'returned_quantity': 0},\n    {'order_id': 'O007', 'order_date': '2026-10-04', 'category': 'Books', 'quantity': 3, 'unit_price_toman': 100000, 'returned_quantity': 0},\n    {'order_id': 'O008', 'order_date': '2026-10-04', 'category': 'Digital', 'quantity': 1, 'unit_price_toman': 1200000, 'returned_quantity': 0},\n    {'order_id': 'O009', 'order_date': '2026-10-05', 'category': 'Stationery', 'quantity': 4, 'unit_price_toman': 25000, 'returned_quantity': 0},\n    {'order_id': 'O010', 'order_date': '2026-10-05', 'category': 'Books', 'quantity': 2, 'unit_price_toman': 150000, 'returned_quantity': 1},\n    {'order_id': 'O011', 'order_date': '2026-10-06', 'category': 'Digital', 'quantity': 1, 'unit_price_toman': 600000, 'returned_quantity': 1},\n    {'order_id': 'O012', 'order_date': '2026-10-06', 'category': 'Stationery', 'quantity': 2, 'unit_price_toman': 40000, 'returned_quantity': 0},\n]\nprint(len(orders))\nprint(sum(amounts(row[\"quantity\"], row[\"unit_price_toman\"],\n                  row[\"returned_quantity\"])[2] for row in orders))\n",
+    "output": "12\n3590000\n",
+    "after": "دادهٔ این مثال با JSON همراه و فصل‌های ششم و هفتم برابر است. عبارت داخل sum یک مولد است: مقدار هر سطر را به‌تدریج می‌دهد و فهرست میانی نمی‌سازد. آشنایی عمیق‌تر با iterator هدف این فصل نیست؛ می‌توان همین کار را با حلقه و انبارهٔ عددی هم نوشت."
+  },
+  {
+    "id": "30",
+    "title": "قرارداد خروجیِ فیلتر رکوردها",
+    "intro": "تابع را به یک نام سراسریِ خاص وابسته نمی‌کنیم؛ داده و گزینه را می‌گیرد.",
+    "code": "def select_category(rows, category):\n    return [row.copy() for row in rows if row[\"category\"] == category]\n\nbooks = select_category(orders, \"Books\")\nbooks[0][\"quantity\"] = 99\nprint(len(books))\nprint(orders[0][\"quantity\"])\n",
+    "output": "4\n2\n",
+    "after": "هر دیکشنری انتخاب‌شده کم‌عمق کپی شده است و تغییر فیلد سطح اول نمونه، اصل را عوض نمی‌کند. تابع نه روی صفحه چاپ می‌کند و نه دادهٔ سراسری را می‌خواند. اگر رکورد دارای فیلد تو‌در‌تو بود، این قرارداد به معنی استقلال عمیق آن فیلد نمی‌بود."
+  }
+]
