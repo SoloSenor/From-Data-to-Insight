@@ -1,0 +1,39 @@
+test_01_schema_and_shape (test_chapter06.Chapter06Tests.test_01_schema_and_shape) ... ok
+test_02_independent_csv_unit_oracle (test_chapter06.Chapter06Tests.test_02_independent_csv_unit_oracle) ... ok
+test_03_fixed_totals (test_chapter06.Chapter06Tests.test_03_fixed_totals) ... ok
+test_04_fixed_group_totals (test_chapter06.Chapter06Tests.test_04_fixed_group_totals) ... ok
+test_05_shares_and_ranking (test_chapter06.Chapter06Tests.test_05_shares_and_ranking) ... ok
+test_06_mean_denominator (test_chapter06.Chapter06Tests.test_06_mean_denominator) ... ok
+test_07_counts_and_unit_totals (test_chapter06.Chapter06Tests.test_07_counts_and_unit_totals) ... ok
+test_08_full_and_partial_returns (test_chapter06.Chapter06Tests.test_08_full_and_partial_returns) ... ok
+test_09_inputs_not_changed (test_chapter06.Chapter06Tests.test_09_inputs_not_changed) ... ok
+test_10_order_invariance (test_chapter06.Chapter06Tests.test_10_order_invariance) ... ok
+test_11_all_full_returns (test_chapter06.Chapter06Tests.test_11_all_full_returns) ... ok
+test_12_zero_price_is_not_full_return (test_chapter06.Chapter06Tests.test_12_zero_price_is_not_full_return) ... ok
+test_13_single_no_return (test_chapter06.Chapter06Tests.test_13_single_no_return) ... ok
+test_14_added_order (test_chapter06.Chapter06Tests.test_14_added_order) ... ok
+test_15_random_valid_unit_oracle (test_chapter06.Chapter06Tests.test_15_random_valid_unit_oracle) ... ok
+test_16_reject_duplicate_ids (test_chapter06.Chapter06Tests.test_16_reject_duplicate_ids) ... ok
+test_17_reject_missing_values (test_chapter06.Chapter06Tests.test_17_reject_missing_values) ... ok
+test_18_reject_invalid_ranges (test_chapter06.Chapter06Tests.test_18_reject_invalid_ranges) ... ok
+test_19_reject_unknown_category (test_chapter06.Chapter06Tests.test_19_reject_unknown_category) ... ok
+test_20_reject_empty_or_wrong_schema (test_chapter06.Chapter06Tests.test_20_reject_empty_or_wrong_schema) ... ok
+test_21_reject_noninteger_quantity (test_chapter06.Chapter06Tests.test_21_reject_noninteger_quantity) ... ok
+test_22_plot_values_labels_and_zero (test_chapter06.Chapter06Tests.test_22_plot_values_labels_and_zero) ... ok
+test_23_reference_script_from_other_cwd (test_chapter06.Chapter06Tests.test_23_reference_script_from_other_cwd) ... ok
+test_24_all_examples_exact_outputs (test_chapter06.Chapter06Tests.test_24_all_examples_exact_outputs) ... ok
+test_25_all_answers_exact_outputs (test_chapter06.Chapter06Tests.test_25_all_answers_exact_outputs) ... ok
+test_26_intentional_error_types (test_chapter06.Chapter06Tests.test_26_intentional_error_types) ... ok
+test_27_notebook_and_script_match_catalog (test_chapter06.Chapter06Tests.test_27_notebook_and_script_match_catalog) ... ok
+test_28_ascii_code_and_outputs (test_chapter06.Chapter06Tests.test_28_ascii_code_and_outputs) ... ok
+test_29_text_multiplication_witness (test_chapter06.Chapter06Tests.test_29_text_multiplication_witness) ... ok
+test_30_utf8_and_readme_links (test_chapter06.Chapter06Tests.test_30_utf8_and_readme_links) ... ok
+test_31_walkthrough_subprocess (test_chapter06.Chapter06Tests.test_31_walkthrough_subprocess) ... ok
+test_32_answers_subprocess (test_chapter06.Chapter06Tests.test_32_answers_subprocess) ... ok
+test_33_released_csv_matches_reference (test_chapter06.Chapter06Tests.test_33_released_csv_matches_reference) ... ok
+test_34_contract_limit_date_not_validated (test_chapter06.Chapter06Tests.test_34_contract_limit_date_not_validated) ... ok
+
+----------------------------------------------------------------------
+Ran 34 tests in 24.176s
+
+OK
