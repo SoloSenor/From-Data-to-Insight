@@ -1,0 +1,45 @@
+test_01_dataset_contract (test_chapter08.Chapter08Tests.test_01_dataset_contract) ... ok
+test_02_json_matches_factory (test_chapter08.Chapter08Tests.test_02_json_matches_factory) ... ok
+test_03_factory_independent_calls (test_chapter08.Chapter08Tests.test_03_factory_independent_calls) ... ok
+test_04_amount_cases (test_chapter08.Chapter08Tests.test_04_amount_cases) ... ok
+test_05_computations_do_not_print (test_chapter08.Chapter08Tests.test_05_computations_do_not_print) ... ok
+test_06_enrich_no_mutation (test_chapter08.Chapter08Tests.test_06_enrich_no_mutation) ... ok
+test_07_documented_shallow_copy (test_chapter08.Chapter08Tests.test_07_documented_shallow_copy) ... ok
+test_08_group_totals (test_chapter08.Chapter08Tests.test_08_group_totals) ... ok
+test_09_report_totals (test_chapter08.Chapter08Tests.test_09_report_totals) ... ok
+test_10_ranking_and_shares (test_chapter08.Chapter08Tests.test_10_ranking_and_shares) ... ok
+test_11_empty_report (test_chapter08.Chapter08Tests.test_11_empty_report) ... ok
+test_12_all_returned (test_chapter08.Chapter08Tests.test_12_all_returned) ... ok
+test_13_zero_price_is_not_full_return (test_chapter08.Chapter08Tests.test_13_zero_price_is_not_full_return) ... ok
+test_14_zero_group_positive_denominator (test_chapter08.Chapter08Tests.test_14_zero_group_positive_denominator) ... ok
+test_15_tie_break (test_chapter08.Chapter08Tests.test_15_tie_break) ... ok
+test_16_duplicate_id_rejected (test_chapter08.Chapter08Tests.test_16_duplicate_id_rejected) ... ok
+test_17_report_preserves_input (test_chapter08.Chapter08Tests.test_17_report_preserves_input) ... ok
+test_18_order_independence (test_chapter08.Chapter08Tests.test_18_order_independence) ... ok
+test_19_independent_small_random_oracle (test_chapter08.Chapter08Tests.test_19_independent_small_random_oracle) ... ok
+test_20_each_sample_row_oracle (test_chapter08.Chapter08Tests.test_20_each_sample_row_oracle) ... ok
+test_21_format_exact_output (test_chapter08.Chapter08Tests.test_21_format_exact_output) ... ok
+test_22_display_filter_preserves_denominator (test_chapter08.Chapter08Tests.test_22_display_filter_preserves_denominator) ... ok
+test_23_display_filter_boundaries (test_chapter08.Chapter08Tests.test_23_display_filter_boundaries) ... ok
+test_24_all_examples_exact (test_chapter08.Chapter08Tests.test_24_all_examples_exact) ... ok
+test_25_all_coding_answers_exact (test_chapter08.Chapter08Tests.test_25_all_coding_answers_exact) ... ok
+test_26_intentional_errors (test_chapter08.Chapter08Tests.test_26_intentional_errors) ... ok
+test_27_print_and_mutable_defaults (test_chapter08.Chapter08Tests.test_27_print_and_mutable_defaults) ... ok
+test_28_type_hints_not_validation (test_chapter08.Chapter08Tests.test_28_type_hints_not_validation) ... ok
+test_29_text_matches_material (test_chapter08.Chapter08Tests.test_29_text_matches_material) ... ok
+test_30_ascii_compilation_and_fences (test_chapter08.Chapter08Tests.test_30_ascii_compilation_and_fences) ... ok
+test_31_notebook_published_unexecuted (test_chapter08.Chapter08Tests.test_31_notebook_published_unexecuted) ... ok
+test_32_example_and_answer_subprocess (test_chapter08.Chapter08Tests.test_32_example_and_answer_subprocess) ... ok
+test_33_runner_from_other_directory (test_chapter08.Chapter08Tests.test_33_runner_from_other_directory) ... ok
+test_34_package_module_entrypoints (test_chapter08.Chapter08Tests.test_34_package_module_entrypoints) ... ok
+test_35_import_has_no_report_side_effect (test_chapter08.Chapter08Tests.test_35_import_has_no_report_side_effect) ... ok
+test_36_stdlib_runtime_dependencies_and_directions (test_chapter08.Chapter08Tests.test_36_stdlib_runtime_dependencies_and_directions) ... ok
+test_37_readme_and_summary_links (test_chapter08.Chapter08Tests.test_37_readme_and_summary_links) ... ok
+test_38_module_use_snippet (test_chapter08.Chapter08Tests.test_38_module_use_snippet) ... ok
+test_39_published_reference_outputs (test_chapter08.Chapter08Tests.test_39_published_reference_outputs) ... ok
+test_40_public_signatures_and_docstrings (test_chapter08.Chapter08Tests.test_40_public_signatures_and_docstrings) ... ok
+
+----------------------------------------------------------------------
+Ran 40 tests in 13.889s
+
+OK
