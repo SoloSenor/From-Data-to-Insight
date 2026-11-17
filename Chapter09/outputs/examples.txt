@@ -1,0 +1,58 @@
+data/raw/orders.csv
+orders.csv orders .csv
+data/raw
+True
+False
+orders.csv
+C:
+C:/book/data/orders.csv
+True True False
+False
+['a.csv', 'b.csv']
+11
+'alpha\nbeta\n'
+False
+True
+1
+'AB\n'
+['start', 'finish']
+approved
+AB
+CD
+''
+A
+1 '  A  '
+2 ''
+3 'B'
+'\n'
+''
+b'A\r\nB\r\n'
+'A\nB\n'
+1 2
+[195, 169]
+True
+True
+order_id
+['A01', 'Books, Stationery', '2']
+['A01', '"Books', ' Stationery"', '2']
+0012 str
+3 str
+0012
+300
+True
+2 4
+A01 2
+''
+True
+2 int
+True None
+{"note": null, "order_id": "0012", "quantity": 2}
+True
+True
+{'1': ['A', 'B']}
+False
+9
+False
+True
+350 100 250
+True

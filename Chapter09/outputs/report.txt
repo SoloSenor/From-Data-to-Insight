@@ -1,0 +1,10 @@
+orders 12
+gross_toman 5020000
+refund_toman 1430000
+retained_toman 3590000
+Digital 2450000 68.25%
+Books 690000 19.22%
+Stationery 450000 12.53%
+csv_json_equal True
+round_trip_equal True
+temporary_exports_removed True
