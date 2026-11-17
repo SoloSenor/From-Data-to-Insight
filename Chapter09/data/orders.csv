@@ -1,0 +1,13 @@
+order_id,order_date,category,quantity,unit_price_toman,returned_quantity
+O001,2026-10-01,Books,2,120000,0
+O002,2026-10-01,Digital,1,800000,0
+O003,2026-10-02,Stationery,5,30000,1
+O004,2026-10-02,Books,1,200000,1
+O005,2026-10-03,Digital,2,450000,1
+O006,2026-10-03,Stationery,3,50000,0
+O007,2026-10-04,Books,3,100000,0
+O008,2026-10-04,Digital,1,1200000,0
+O009,2026-10-05,Stationery,4,25000,0
+O010,2026-10-05,Books,2,150000,1
+O011,2026-10-06,Digital,1,600000,1
+O012,2026-10-06,Stationery,2,40000,0
