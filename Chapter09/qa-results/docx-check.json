@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "source_document_sha256": "5ea4a11c17f8ae1d9daf897eab788bfc4ca0a47aa70fd116a2e1bb7132534106",
+  "source_document_unchanged": true,
+  "standalone_chapter": true,
+  "four_existing_style_definitions_unchanged": true,
+  "preserved_style_names": [
+    "Heading 1",
+    "Heading 2",
+    "Python Code",
+    "Python Output"
+  ],
+  "code_output_lines_round_trip_matched": 631,
+  "fenced_blocks": 91,
+  "table_count": 5,
+  "paragraph_count": 1020,
+  "all_code_output_ascii_ltr_monospace": true,
+  "word_application_tested": false
+}

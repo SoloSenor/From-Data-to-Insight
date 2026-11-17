@@ -1,0 +1,51 @@
+test_01_thirty_examples_independently (test_chapter09.Chapter09Tests.test_01_thirty_examples_independently) ... ok
+test_02_full_example_script (test_chapter09.Chapter09Tests.test_02_full_example_script) ... ok
+test_03_eight_coding_answers (test_chapter09.Chapter09Tests.test_03_eight_coding_answers) ... ok
+test_04_intentional_error_types (test_chapter09.Chapter09Tests.test_04_intentional_error_types) ... ok
+test_05_ascii_python_outputs_and_fences (test_chapter09.Chapter09Tests.test_05_ascii_python_outputs_and_fences) ... ok
+test_06_narrative_examples_match_catalog (test_chapter09.Chapter09Tests.test_06_narrative_examples_match_catalog) ... ok
+test_07_reference_inputs_equal (test_chapter09.Chapter09Tests.test_07_reference_inputs_equal) ... ok
+test_08_reference_amounts_independent (test_chapter09.Chapter09Tests.test_08_reference_amounts_independent) ... ok
+test_09_project_two_entry_points_from_other_directory (test_chapter09.Chapter09Tests.test_09_project_two_entry_points_from_other_directory) ... ok
+test_10_quiet_import (test_chapter09.Chapter09Tests.test_10_quiet_import) ... ok
+test_11_csv_round_trip (test_chapter09.Chapter09Tests.test_11_csv_round_trip) ... ok
+test_12_json_round_trip (test_chapter09.Chapter09Tests.test_12_json_round_trip) ... ok
+test_13_create_only_preserves_existing (test_chapter09.Chapter09Tests.test_13_create_only_preserves_existing) ... ok
+test_14_explicit_overwrite (test_chapter09.Chapter09Tests.test_14_explicit_overwrite) ... ok
+test_15_invalid_data_before_truncation (test_chapter09.Chapter09Tests.test_15_invalid_data_before_truncation) ... ok
+test_16_no_parent_creation (test_chapter09.Chapter09Tests.test_16_no_parent_creation) ... ok
+test_17_empty_sets (test_chapter09.Chapter09Tests.test_17_empty_sets) ... ok
+test_18_root_must_be_list (test_chapter09.Chapter09Tests.test_18_root_must_be_list) ... ok
+test_19_record_must_be_dict_and_exact_schema (test_chapter09.Chapter09Tests.test_19_record_must_be_dict_and_exact_schema) ... ok
+test_20_text_fields_nonempty_no_outer_whitespace (test_chapter09.Chapter09Tests.test_20_text_fields_nonempty_no_outer_whitespace) ... ok
+test_21_canonical_dates_and_leap_days (test_chapter09.Chapter09Tests.test_21_canonical_dates_and_leap_days) ... ok
+test_22_integer_types_no_bool_float_null (test_chapter09.Chapter09Tests.test_22_integer_types_no_bool_float_null) ... ok
+test_23_numeric_ranges (test_chapter09.Chapter09Tests.test_23_numeric_ranges) ... ok
+test_24_duplicate_order_ids (test_chapter09.Chapter09Tests.test_24_duplicate_order_ids) ... ok
+test_25_validation_and_writing_do_not_mutate (test_chapter09.Chapter09Tests.test_25_validation_and_writing_do_not_mutate) ... ok
+test_26_csv_header_exact_order (test_chapter09.Chapter09Tests.test_26_csv_header_exact_order) ... ok
+test_27_csv_short_and_extra_fields (test_chapter09.Chapter09Tests.test_27_csv_short_and_extra_fields) ... ok
+test_28_csv_bad_and_missing_numeric_values (test_chapter09.Chapter09Tests.test_28_csv_bad_and_missing_numeric_values) ... ok
+test_29_bom_accepted (test_chapter09.Chapter09Tests.test_29_bom_accepted) ... ok
+test_30_csv_crlf_and_blank_lines (test_chapter09.Chapter09Tests.test_30_csv_crlf_and_blank_lines) ... ok
+test_31_csv_whitespace_numeric_policy (test_chapter09.Chapter09Tests.test_31_csv_whitespace_numeric_policy) ... ok
+test_32_csv_bad_quotes (test_chapter09.Chapter09Tests.test_32_csv_bad_quotes) ... ok
+test_33_json_malformed_extra_document (test_chapter09.Chapter09Tests.test_33_json_malformed_extra_document) ... ok
+test_34_json_wrong_root_and_schema (test_chapter09.Chapter09Tests.test_34_json_wrong_root_and_schema) ... ok
+test_35_duplicate_json_keys_known_limit (test_chapter09.Chapter09Tests.test_35_duplicate_json_keys_known_limit) ... ok
+test_36_special_characters_identifiers_and_unicode (test_chapter09.Chapter09Tests.test_36_special_characters_identifiers_and_unicode) ... ok
+test_37_seeded_generated_round_trips_and_totals (test_chapter09.Chapter09Tests.test_37_seeded_generated_round_trips_and_totals) ... ok
+test_38_file_modes_and_resource_cleanup (test_chapter09.Chapter09Tests.test_38_file_modes_and_resource_cleanup) ... ok
+test_39_exercise_write_once_and_count_edges (test_chapter09.Chapter09Tests.test_39_exercise_write_once_and_count_edges) ... ok
+test_40_contextual_export_snippet (test_chapter09.Chapter09Tests.test_40_contextual_export_snippet) ... ok
+test_41_missing_and_wrong_encoding_inputs (test_chapter09.Chapter09Tests.test_41_missing_and_wrong_encoding_inputs) ... ok
+test_42_empty_file_versus_header_only (test_chapter09.Chapter09Tests.test_42_empty_file_versus_header_only) ... ok
+test_43_pure_path_not_actual_windows_execution (test_chapter09.Chapter09Tests.test_43_pure_path_not_actual_windows_execution) ... ok
+test_44_narrative_module_snippets_current (test_chapter09.Chapter09Tests.test_44_narrative_module_snippets_current) ... ok
+test_45_json_nonfinite_policy (test_chapter09.Chapter09Tests.test_45_json_nonfinite_policy) ... ok
+test_46_same_total_not_same_records (test_chapter09.Chapter09Tests.test_46_same_total_not_same_records) ... ok
+
+----------------------------------------------------------------------
+Ran 46 tests in 23.246s
+
+OK
