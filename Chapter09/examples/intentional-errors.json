@@ -1,0 +1,58 @@
+[
+  {
+    "id": "09-E01",
+    "title": "خواندن فایل غایب",
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\nwith TemporaryDirectory() as folder:\n    (Path(folder) / \"missing.txt\").read_text(encoding=\"utf-8\")\n",
+    "exception": "FileNotFoundError",
+    "explanation": "مسیر، پوشهٔ کاری و مرحلهٔ تولید ورودی را بررسی کنید؛ ساختن یک فایل خالی برای خاموش‌کردن خطا الزاماً راه‌حل درست نیست."
+  },
+  {
+    "id": "09-E02",
+    "title": "ایجاد انحصاری روی فایل موجود",
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\nwith TemporaryDirectory() as folder:\n    path = Path(folder) / \"approved.txt\"\n    path.write_text(\"approved\", encoding=\"utf-8\")\n    with path.open(\"x\", encoding=\"utf-8\") as target:\n        target.write(\"new\")\n",
+    "exception": "FileExistsError",
+    "explanation": "حالت x از بازنویسی جلوگیری می‌کند. مقصد تازه، نسخه‌بندی یا بازنویسیِ آگاهانه را انتخاب کنید؛ خطا را به‌طور خودکار با w دور نزنید."
+  },
+  {
+    "id": "09-E03",
+    "title": "استفاده از فایل بسته",
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\nwith TemporaryDirectory() as folder:\n    path = Path(folder) / \"note.txt\"\n    path.write_text(\"ready\", encoding=\"utf-8\")\n    with path.open(\"r\", encoding=\"utf-8\") as source:\n        source.read()\n    source.read()\n",
+    "exception": "ValueError",
+    "explanation": "خواندن باید در طول عمر منبع انجام شود یا فایل دوباره باز شود. باقی‌ماندن نام متغیر، منبع را باز نگه نمی‌دارد."
+  },
+  {
+    "id": "09-E04",
+    "title": "کدگذاری اشتباه",
+    "code": "raw = b\"\\xff\"\nraw.decode(\"utf-8\")\n",
+    "exception": "UnicodeDecodeError",
+    "explanation": "این بایت با UTF-8 معتبر سازگار نیست. کدگذاری واقعی را از منبع مشخص کنید؛ errors=\"ignore\" تشخیص خطا را به حذف داده تبدیل می‌کند."
+  },
+  {
+    "id": "09-E05",
+    "title": "تبدیل عدد نامعتبر",
+    "code": "int(\"2.5\")\n",
+    "exception": "ValueError",
+    "explanation": "قرارداد تعداد صحیح است. تبدیل از مسیر float و سپس int می‌تواند مقدار را قطع و مسئله را پنهان کند؛ دربارهٔ نوع مجاز تصمیم بگیرید."
+  },
+  {
+    "id": "09-E06",
+    "title": "نقل‌قول بسته‌نشده در CSV",
+    "code": "import csv\nfrom io import StringIO\nwith StringIO('id,category\\nA01,\"unfinished\\n', newline=\"\") as source:\n    list(csv.reader(source, strict=True))\n",
+    "exception": "Error",
+    "explanation": "نوع کامل این استثنا csv.Error است. strict=True برای بخشی از خطاهای نحوی کمک می‌کند؛ تضمینِ schema یا کیفیت معنایی نیست."
+  },
+  {
+    "id": "09-E07",
+    "title": "نحو Python به‌جای JSON",
+    "code": "import json\njson.loads(\"{'quantity': 2}\")\n",
+    "exception": "JSONDecodeError",
+    "explanation": "کلید و رشته در JSON نقل‌قول دوتایی می‌خواهند. برای اصلاح فایل نامطمئن از eval استفاده نکنید."
+  },
+  {
+    "id": "09-E08",
+    "title": "چسباندن دو سند JSON",
+    "code": "import json\nfrom io import StringIO\nwith StringIO() as target:\n    json.dump({\"id\": \"A01\"}, target)\n    json.dump({\"id\": \"A02\"}, target)\n    json.loads(target.getvalue())\n",
+    "exception": "JSONDecodeError",
+    "explanation": "یک فهرست بسازید و یک بار بنویسید، یا از قرارداد صریح JSON Lines و parser متناسب استفاده کنید؛ append عمومی راه افزودن رکورد به JSON نیست."
+  }
+]

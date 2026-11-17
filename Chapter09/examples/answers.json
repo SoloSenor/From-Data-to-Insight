@@ -1,0 +1,50 @@
+[
+  {
+    "id": "09-A05",
+    "exercise": 5,
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\n\ndef count_nonblank(path):\n    count = 0\n    with Path(path).open(\"r\", encoding=\"utf-8\") as source:\n        for line in source:\n            if line.strip():\n                count += 1\n    return count\n\nwith TemporaryDirectory() as folder:\n    path = Path(folder) / \"lines.txt\"\n    path.write_text(\"alpha\\n\\n   \\nbeta\\n\", encoding=\"utf-8\")\n    print(count_nonblank(path))\n",
+    "output": "2\n"
+  },
+  {
+    "id": "09-A06",
+    "exercise": 6,
+    "code": "import csv\nfrom io import StringIO\ntext = \"order_id,quantity,unit_price_toman\\n0012,3,100\\n\"\nwith StringIO(text, newline=\"\") as source:\n    row = next(csv.DictReader(source))\namount = int(row[\"quantity\"]) * int(row[\"unit_price_toman\"])\nprint(row[\"order_id\"], amount)\n",
+    "output": "0012 300\n"
+  },
+  {
+    "id": "09-A07",
+    "exercise": 7,
+    "code": "import csv\nfrom pathlib import Path\nfrom tempfile import TemporaryDirectory\nrows = [{\"category\": \"A,B\"}, {\"category\": \"C\\nD\"}]\nwith TemporaryDirectory() as folder:\n    path = Path(folder) / \"quoted.csv\"\n    with path.open(\"x\", encoding=\"utf-8\", newline=\"\") as target:\n        writer = csv.DictWriter(target, fieldnames=[\"category\"],\n                                lineterminator=\"\\n\")\n        writer.writeheader()\n        writer.writerows(rows)\n    with path.open(\"r\", encoding=\"utf-8\", newline=\"\") as source:\n        restored = list(csv.DictReader(source))\n    print(restored == rows)\n",
+    "output": "True\n"
+  },
+  {
+    "id": "09-A08",
+    "exercise": 8,
+    "code": "import json\nrow = {\"quantity\": 2, \"order_id\": \"0012\"}\ntext = json.dumps(row, sort_keys=True, allow_nan=False)\nprint(text)\nprint(json.loads(text) == row)\n",
+    "output": "{\"order_id\": \"0012\", \"quantity\": 2}\nTrue\n"
+  },
+  {
+    "id": "09-A09",
+    "exercise": 9,
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\n\ndef write_once(path, text):\n    with Path(path).open(\"x\", encoding=\"utf-8\") as target:\n        target.write(text)\n\nwith TemporaryDirectory() as folder:\n    path = Path(folder) / \"result.txt\"\n    write_once(path, \"saved\")\n    print(path.read_text(encoding=\"utf-8\"))\n",
+    "output": "saved\n"
+  },
+  {
+    "id": "09-A10",
+    "exercise": 10,
+    "code": "import json\ntry:\n    json.dumps({\"rate\": float(\"nan\")}, allow_nan=False)\nexcept ValueError:\n    print(\"rejected\")\n",
+    "output": "rejected\n"
+  },
+  {
+    "id": "09-A11",
+    "exercise": 11,
+    "code": "def valid_counts(quantity, returned):\n    return (type(quantity) is int and type(returned) is int\n            and quantity > 0 and 0 <= returned <= quantity)\n\nprint(valid_counts(3, 1))\nprint(valid_counts(True, 0))\nprint(valid_counts(2, 3))\n",
+    "output": "True\nFalse\nFalse\n"
+  },
+  {
+    "id": "09-A12",
+    "exercise": 12,
+    "code": "import csv\nimport json\nfrom pathlib import Path\nfrom tempfile import TemporaryDirectory\nrows = [{\"batch_id\": \"B01\", \"tested\": 40, \"defects\": 2},\n        {\"batch_id\": \"B02\", \"tested\": 60, \"defects\": 3}]\nwith TemporaryDirectory() as folder:\n    root = Path(folder)\n    with (root / \"batches.csv\").open(\n            \"x\", encoding=\"utf-8\", newline=\"\") as target:\n        writer = csv.DictWriter(target, fieldnames=list(rows[0]),\n                                lineterminator=\"\\n\")\n        writer.writeheader()\n        writer.writerows(rows)\n    with (root / \"batches.csv\").open(\n            \"r\", encoding=\"utf-8\", newline=\"\") as source:\n        loaded = list(csv.DictReader(source))\n    tested = sum(int(row[\"tested\"]) for row in loaded)\n    defects = sum(int(row[\"defects\"]) for row in loaded)\n    result = {\"tested\": tested, \"defects\": defects,\n              \"defect_rate\": defects / tested if tested else None}\n    with (root / \"quality.json\").open(\"x\", encoding=\"utf-8\") as target:\n        json.dump(result, target, allow_nan=False)\n    with (root / \"quality.json\").open(\"r\", encoding=\"utf-8\") as source:\n        restored = json.load(source)\n    print(tested, defects, f\"{result['defect_rate']:.2%}\")\n    print(restored == result)\n",
+    "output": "100 5 5.00%\nTrue\n"
+  }
+]

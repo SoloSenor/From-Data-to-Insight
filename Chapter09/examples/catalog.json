@@ -1,0 +1,212 @@
+[
+  {
+    "id": "09-01",
+    "title": "ساخت مسیر بدون چسباندن رشته‌ها",
+    "code": "from pathlib import Path\npath = Path(\"data\") / \"raw\" / \"orders.csv\"\nprint(path.as_posix())\nprint(path.name, path.stem, path.suffix)\nprint(path.parent.as_posix())\n",
+    "output": "data/raw/orders.csv\norders.csv orders .csv\ndata/raw\n",
+    "explanation": "عملگر / در اینجا مسیر می‌سازد، نه تقسیم عددی. name نام فایل با پسوند، stem نام بدون آخرین پسوند و suffix آخرین پسوند است. ساخت Path نه فایل می‌سازد و نه وجود آن را تأیید می‌کند. as_posix فقط شکل نمایشیِ جداکننده را یکدست می‌کند؛ فایل را جابه‌جا نمی‌کند."
+  },
+  {
+    "id": "09-02",
+    "title": "مسیر نسبی و پوشهٔ کاری",
+    "code": "from pathlib import Path\nprint(Path.cwd().is_absolute())\nprint(Path(\"data/orders.csv\").is_absolute())\n",
+    "output": "True\nFalse\n",
+    "explanation": "Path.cwd پوشهٔ کاری فرایند را می‌دهد، نه لزوماً پوشهٔ کد. مسیر نسبی هنگام دسترسی به فایل نسبت به همین پوشه تفسیر می‌شود. برای پرهیز از خروجی وابسته به دستگاه، فقط ویژگی مسیر را چاپ کرده‌ایم. تغییر پوشهٔ کاری می‌تواند مقصد همان رشتهٔ نسبی را عوض کند."
+  },
+  {
+    "id": "09-03",
+    "title": "دیدن نحو Windows بدون وابستگی به سیستم‌عامل",
+    "code": "from pathlib import PureWindowsPath\npath = PureWindowsPath(r\"C:\\book\\data\\orders.csv\")\nprint(path.name)\nprint(path.drive)\nprint(path.as_posix())\n",
+    "output": "orders.csv\nC:\nC:/book/data/orders.csv\n",
+    "explanation": "PureWindowsPath فقط نحو مسیر Windows را تحلیل می‌کند و به دیسک دست نمی‌زند؛ روی Linux هم برای این مثال مناسب است. این با ادعای وجود درایو C فرق دارد. رشتهٔ خام تفسیر بسیاری از بک‌اسلش‌ها به‌عنوان escape را متوقف می‌کند؛ رشتهٔ خام نمی‌تواند با یک بک‌اسلش تنها پایان یابد."
+  },
+  {
+    "id": "09-04",
+    "title": "ساخت پوشهٔ خروجی در فضای موقت",
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\nwith TemporaryDirectory() as folder:\n    output = Path(folder) / \"outputs\" / \"daily\"\n    output.mkdir(parents=True, exist_ok=True)\n    print(output.exists(), output.is_dir(), output.is_file())\nprint(output.exists())\n",
+    "output": "True True False\nFalse\n",
+    "explanation": "parents=True والدهای گمشده را می‌سازد. exist_ok=True وجود همان پوشه را قابل‌قبول می‌کند، نه هر نوع مانع یا خطا را. TemporaryDirectory پس از پایان with پاک می‌شود؛ این قرارداد پاک‌سازیِ پوشهٔ موقت است و ویژگی عمومی with نیست. اگر در مسیر موردنظر یک فایل عادی باشد، mkdir همچنان می‌تواند خطا بدهد."
+  },
+  {
+    "id": "09-05",
+    "title": "پیمایش با ترتیب صریح",
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\nwith TemporaryDirectory() as folder:\n    root = Path(folder)\n    for name in [\"b.csv\", \"a.csv\", \"notes.txt\"]:\n        (root / name).write_text(\"sample\", encoding=\"utf-8\")\n    names = sorted(path.name for path in root.glob(\"*.csv\")\n                   if path.is_file())\n    print(names)\n",
+    "output": "['a.csv', 'b.csv']\n",
+    "explanation": "به ترتیب طبیعیِ glob تکیه نمی‌کنیم؛ نام‌ها را صریح مرتب کرده‌ایم. is_file مانع ورود پوشه‌ای با نام دارای پسوند csv به این فهرست می‌شود. تطبیق بزرگی و کوچکی حروف و بعضی جزئیات فایل‌سیستم ممکن است میان سامانه‌ها متفاوت باشد؛ این دادهٔ کوچک فقط نام‌های ساده دارد."
+  },
+  {
+    "id": "09-06",
+    "title": "روش کوتاه برای فایل متنی کوچک",
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\nwith TemporaryDirectory() as folder:\n    path = Path(folder) / \"note.txt\"\n    count = path.write_text(\"alpha\\nbeta\\n\", encoding=\"utf-8\")\n    print(count)\n    print(repr(path.read_text(encoding=\"utf-8\")))\n",
+    "output": "11\n'alpha\\nbeta\\n'\n",
+    "explanation": "write_text فایل را می‌نویسد و می‌بندد؛ اگر فایل قبلاً وجود داشته باشد بازنویسی می‌شود. عدد برگشتی تعداد نویسه‌های متن نوشته‌شده است، نه الزاماً تعداد بایت‌های دیسک. read_text همهٔ فایل را در حافظه می‌خواند. در این مثال ورودی ASCII است و شمار نویسه‌ها و بایت‌های UTF-8 برابر می‌شود؛ این برابری عمومی نیست."
+  },
+  {
+    "id": "09-07",
+    "title": "بسته‌شدن فایل پس از بلوک with",
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\nwith TemporaryDirectory() as folder:\n    path = Path(folder) / \"note.txt\"\n    with path.open(\"x\", encoding=\"utf-8\") as target:\n        target.write(\"ready\")\n        print(target.closed)\n    print(target.closed)\n",
+    "output": "False\nTrue\n",
+    "explanation": "با خروج از with مربوط به فایل، close فراخوانی می‌شود؛ حتی اگر اجرای بدنه با استثنا قطع شود. نام target هنوز وجود دارد اما فایل بسته است. بستن فایل و پاک‌کردن آن دو کار جدا هستند. with برای فایل معمولی داده را حذف نمی‌کند و تراکنش یا تضمین دوام در قطع برق هم نمی‌سازد."
+  },
+  {
+    "id": "09-08",
+    "title": "تفاوت write و print",
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\nwith TemporaryDirectory() as folder:\n    path = Path(folder) / \"note.txt\"\n    with path.open(\"x\", encoding=\"utf-8\", newline=\"\\n\") as target:\n        count = target.write(\"A\")\n        print(\"B\", file=target)\n    print(count)\n    print(repr(path.read_text(encoding=\"utf-8\")))\n",
+    "output": "1\n'AB\\n'\n",
+    "explanation": "write پایان خط اضافه نمی‌کند؛ print به‌طور پیش‌فرض پایان خط دارد. newline=\"\\n\" در نوشتن این نمونه، ترجمهٔ پایان خط را کنترل می‌کند. خروجی repr نشانهٔ پایان خط را قابل‌دیدن می‌کند. پارامتر file مسیر چاپ را به فایل می‌برد؛ این چاپ روی صفحه نیست."
+  },
+  {
+    "id": "09-09",
+    "title": "افزودن به انتهای فایل",
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\nwith TemporaryDirectory() as folder:\n    path = Path(folder) / \"events.txt\"\n    path.write_text(\"start\\n\", encoding=\"utf-8\")\n    with path.open(\"a\", encoding=\"utf-8\", newline=\"\\n\") as target:\n        target.write(\"finish\\n\")\n    print(path.read_text(encoding=\"utf-8\").splitlines())\n",
+    "output": "['start', 'finish']\n",
+    "explanation": "حالت a به انتهای فایل می‌افزاید و فایل غایب را می‌سازد. این حالت به‌تنهایی تضمین نمی‌کند که چند نویسندهٔ هم‌زمان، یک گزارش رویدادِ بدون تداخل تولید کنند. اگر این سلول را بدون پوشهٔ موقت روی فایل ثابت تکرار کنیم، رکوردهای تکراری می‌سازیم؛ اجرای دوباره باید آگاهانه طراحی شود."
+  },
+  {
+    "id": "09-10",
+    "title": "ایجاد انحصاری به‌جای بازنویسی ناخواسته",
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\nwith TemporaryDirectory() as folder:\n    path = Path(folder) / \"result.txt\"\n    with path.open(\"x\", encoding=\"utf-8\") as target:\n        target.write(\"approved\")\n    print(path.read_text(encoding=\"utf-8\"))\n",
+    "output": "approved\n",
+    "explanation": "حالت x تنها وقتی فایل وجود ندارد آن را ایجاد می‌کند. وجود قبلیِ فایل با FileExistsError گزارش می‌شود؛ نمونهٔ خطا در بخش خطاهای عمدی آمده است. الگوی «اول exists، سپس w» میان بررسی و نوشتن فاصلهٔ زمانی دارد و جانشین ایجاد انحصاری نیست. x هم مانع همهٔ خطرهای مجوز، لینک نمادین یا خرابی دستگاه نیست."
+  },
+  {
+    "id": "09-11",
+    "title": "مکان‌نما و پایان فایل",
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\nwith TemporaryDirectory() as folder:\n    path = Path(folder) / \"letters.txt\"\n    path.write_text(\"ABCD\", encoding=\"utf-8\")\n    with path.open(\"r\", encoding=\"utf-8\") as source:\n        print(source.read(2))\n        print(source.read())\n        print(repr(source.read()))\n        source.seek(0)\n        print(source.read(1))\n",
+    "output": "AB\nCD\n''\nA\n",
+    "explanation": "خواندن، مکان‌نمای جریان را جلو می‌برد؛ خواندنِ دوباره خودکار از ابتدا شروع نمی‌شود. رشتهٔ خالی در این نمونه نشانهٔ رسیدن به پایان فایل است. seek(0) به ابتدای جریان برمی‌گردد. در فایل متنی، عدد tell لزوماً شمارهٔ نویسه یا آفست بایتِ قابل‌محاسبه نیست؛ در این فصل فقط بازگشت به ابتدا را به کار می‌بریم."
+  },
+  {
+    "id": "09-12",
+    "title": "پیمایش خطی بدون حذف فاصله‌های معنادار",
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\nwith TemporaryDirectory() as folder:\n    path = Path(folder) / \"lines.txt\"\n    path.write_text(\"  A  \\n\\nB\\n\", encoding=\"utf-8\")\n    with path.open(\"r\", encoding=\"utf-8\") as source:\n        for number, line in enumerate(source, start=1):\n            print(number, repr(line.rstrip(\"\\n\")))\n",
+    "output": "1 '  A  '\n2 ''\n3 'B'\n",
+    "explanation": "در این نمونه فقط علامت پایان خط حذف شده است؛ strip بدون آرگومان، فاصله‌های ابتدا و انتهای داده را هم می‌زداید. خط خالیِ داخل فایل همچنان یک خط است. پردازش خط‌به‌خط، نیاز به نگهداری همهٔ خطوط را کم می‌کند، اما یک خط بسیار بزرگ یا انباشتن نتایج در فهرست هنوز می‌تواند حافظهٔ زیاد بخواهد."
+  },
+  {
+    "id": "09-13",
+    "title": "تفاوت خط خالی با پایان فایل",
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\nwith TemporaryDirectory() as folder:\n    path = Path(folder) / \"lines.txt\"\n    path.write_text(\"\\n\", encoding=\"utf-8\")\n    with path.open(\"r\", encoding=\"utf-8\") as source:\n        print(repr(source.readline()))\n        print(repr(source.readline()))\n",
+    "output": "'\\n'\n''\n",
+    "explanation": "خواندن یک خطِ خالی معمولاً رشتهٔ شامل پایان خط می‌دهد؛ پایان فایل رشتهٔ خالی می‌دهد. اگر پیش از بررسی پایان فایل، بی‌محابا strip کنیم، این دو حالت را یکسان کرده‌ایم. در یک parser ساده، این اشتباه می‌تواند خواندن را زودتر از موعد متوقف کند."
+  },
+  {
+    "id": "09-14",
+    "title": "پایان خط روی دیسک و در متن",
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\nwith TemporaryDirectory() as folder:\n    path = Path(folder) / \"lines.txt\"\n    path.write_bytes(b\"A\\r\\nB\\r\\n\")\n    print(repr(path.read_bytes()))\n    print(repr(path.read_text(encoding=\"utf-8\")))\n",
+    "output": "b'A\\r\\nB\\r\\n'\n'A\\nB\\n'\n",
+    "explanation": "در خواندن متنی با تنظیم پیش‌فرض، پایان‌خط‌های رایج به \\n تبدیل می‌شوند. read_bytes بایت‌های واقعی را برمی‌گرداند و چنین ترجمه‌ای ندارد. برابرنبودن بایت‌ها لزوماً به معنی تفاوت دادهٔ متنی نیست؛ برای کنترل یک انتقال باید از ابتدا معلوم باشد برابریِ بایتی می‌خواهیم یا برابری معنایی."
+  },
+  {
+    "id": "09-15",
+    "title": "نویسه با بایت یکسان نیست",
+    "code": "text = \"\\u00e9\"\nencoded = text.encode(\"utf-8\")\nprint(len(text), len(encoded))\nprint(list(encoded))\nprint(encoded.decode(\"utf-8\") == text)\n",
+    "output": "1 2\n[195, 169]\nTrue\n",
+    "explanation": "یک نویسهٔ لاتینِ غیر ASCII با escape نوشته شده تا خودِ کد و خروجی همچنان ASCII بمانند. UTF-8 آن را با دو بایت نمایش می‌دهد. encode متن را به بایت و decode بایت را به متن تبدیل می‌کند. شمار نویسهٔ Python هم لزوماً شمار حرفِ قابل‌دیدنِ کاربر نیست؛ ترکیب نشانه‌ها و خوشه‌های نوشتاری در این فصل بررسی نمی‌شود."
+  },
+  {
+    "id": "09-16",
+    "title": "خواندن UTF-8 همراه BOM",
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\nwith TemporaryDirectory() as folder:\n    path = Path(folder) / \"header.txt\"\n    path.write_bytes(b\"\\xef\\xbb\\xbforder_id\\n\")\n    plain = path.read_text(encoding=\"utf-8\")\n    clean = path.read_text(encoding=\"utf-8-sig\")\n    print(plain.startswith(\"\\ufeff\"))\n    print(clean.splitlines()[0])\n",
+    "output": "True\norder_id\n",
+    "explanation": "BOM آغاز یک فایل UTF-8 ممکن است بی‌سروصدا بخشی از نام اولین ستون شود. utf-8-sig در خواندن، این امضای آغازین را در صورت وجود برمی‌دارد و فایل UTF-8 بدون BOM را هم می‌خواند. این تنظیم، تشخیص‌دهندهٔ همهٔ کدگذاری‌ها نیست. در نوشتن با همین نام کدگذاری، BOM اضافه می‌شود؛ پروژهٔ ما خروجی UTF-8 بدون BOM می‌دهد."
+  },
+  {
+    "id": "09-17",
+    "title": "CSV و ویرگول داخل مقدار",
+    "code": "import csv\nfrom io import StringIO\ntext = 'order_id,category,quantity\\nA01,\"Books, Stationery\",2\\n'\nwith StringIO(text, newline=\"\") as source:\n    rows = list(csv.reader(source))\nprint(rows[1])\n",
+    "output": "['A01', 'Books, Stationery', '2']\n",
+    "explanation": "نقل‌قول‌ها باعث می‌شوند ویرگولِ داخل category جداکنندهٔ ستون محسوب نشود. csv.reader به‌طور پیش‌فرض فهرستی از رشته‌ها برای هر رکورد می‌دهد؛ نه تاپل و نه تبدیل خودکار عدد. StringIO یک جریان متنیِ درون حافظه است و اینجا صرفاً نمایش کوتاه‌ترِ قواعد قالب را ممکن می‌کند."
+  },
+  {
+    "id": "09-18",
+    "title": "چرا split جای parser نیست؟",
+    "code": "line = 'A01,\"Books, Stationery\",2'\nprint(line.split(\",\"))\n",
+    "output": "['A01', '\"Books', ' Stationery\"', '2']\n",
+    "explanation": "این خروجی چهار تکه دارد، در حالی که رکورد سه فیلد دارد. split از نقل‌قول CSV، نقل‌قولِ دوتایی و پایان خطِ داخل فیلد خبر ندارد. تغییر جداکننده به سمی‌کالن نیز مسئلهٔ عمومی را حل نمی‌کند؛ قالب و parser باید با هم قرارداد داشته باشند."
+  },
+  {
+    "id": "09-19",
+    "title": "DictReader نوع ستون را حدس نمی‌زند",
+    "code": "import csv\nfrom io import StringIO\ntext = \"order_id,quantity\\n0012,3\\n\"\nwith StringIO(text, newline=\"\") as source:\n    row = next(csv.DictReader(source))\nprint(row[\"order_id\"], type(row[\"order_id\"]).__name__)\nprint(row[\"quantity\"], type(row[\"quantity\"]).__name__)\n",
+    "output": "0012 str\n3 str\n",
+    "explanation": "شناسهٔ 0012 باید متن بماند تا صفرهای آغازین از بین نرود. quantity هنوز رشته است؛ همین ظاهر عددی به آن معنای عددی نمی‌دهد. فرمت فایل CSV به‌تنهایی فرهنگ دادهٔ ستون‌ها را حمل نمی‌کند. واحد پول، نوع شناسه و دامنهٔ مجاز باید جدا مستند شوند."
+  },
+  {
+    "id": "09-20",
+    "title": "تبدیل فقط ستون‌های عددی",
+    "code": "import csv\nfrom io import StringIO\ntext = \"order_id,quantity,unit_price_toman\\n0012,3,100\\n\"\nwith StringIO(text, newline=\"\") as source:\n    row = next(csv.DictReader(source))\nfor field in [\"quantity\", \"unit_price_toman\"]:\n    row[field] = int(row[field])\nprint(row[\"order_id\"])\nprint(row[\"quantity\"] * row[\"unit_price_toman\"])\n",
+    "output": "0012\n300\n",
+    "explanation": "تبدیل نوع انتخابی است، نه اجرای int روی همهٔ فیلدها. int روی دادهٔ گمشده یا متن نامعتبر خطا می‌دهد. موفقیت تبدیل، مثبت‌بودن تعداد یا معقول‌بودن قیمت را تضمین نمی‌کند. باید دریافت بایت، تجزیهٔ قالب، تبدیل نوع، بررسی قرارداد و سپس محاسبه را مراحل جدا دانست."
+  },
+  {
+    "id": "09-21",
+    "title": "نوشتن CSV و بازخوانی مقدارهای ویژه",
+    "code": "import csv\nfrom pathlib import Path\nfrom tempfile import TemporaryDirectory\nrows = [{\"order_id\": \"A01\", \"category\": 'Tools, \"Small\"'},\n        {\"order_id\": \"A02\", \"category\": \"Line1\\nLine2\"}]\nwith TemporaryDirectory() as folder:\n    path = Path(folder) / \"items.csv\"\n    with path.open(\"x\", encoding=\"utf-8\", newline=\"\") as target:\n        writer = csv.DictWriter(target, fieldnames=[\"order_id\", \"category\"],\n                                lineterminator=\"\\n\")\n        writer.writeheader()\n        writer.writerows(rows)\n    with path.open(\"r\", encoding=\"utf-8\", newline=\"\") as source:\n        restored = list(csv.DictReader(source))\n    print(restored == rows)\n    print(len(restored), len(path.read_text(encoding=\"utf-8\").splitlines()))\n",
+    "output": "True\n2 4\n",
+    "explanation": "دو رکورد داده به‌همراه سرستون، به‌علت پایان خط داخل یک فیلد، چهار خط فیزیکی ساخته‌اند. تعداد خطوط منهای یک، روش قابل‌اعتماد شمارش رکورد CSV نیست. newline=\"\" را هم در خواندن و هم نوشتن می‌دهیم تا ماژول csv قواعد پایان خط را مدیریت کند. writer نقل‌قول‌گذاری را انجام می‌دهد؛ خودمان join نمی‌کنیم."
+  },
+  {
+    "id": "09-22",
+    "title": "جداکنندهٔ قراردادی",
+    "code": "import csv\nfrom io import StringIO\ntext = \"order_id;quantity\\nA01;2\\n\"\nwith StringIO(text, newline=\"\") as source:\n    row = next(csv.DictReader(source, delimiter=\";\"))\nprint(row[\"order_id\"], int(row[\"quantity\"]))\n",
+    "output": "A01 2\n",
+    "explanation": "پسوند csv تضمین نمی‌کند جداکننده ویرگول باشد. جداکننده را از قرارداد تولیدکننده می‌گیریم؛ حدس‌زدن خودکار روی نمونهٔ کوچک ممکن است نادرست باشد. تغییر delimiter به‌تنهایی فرمت عدد اعشاریِ محلی یا جداکنندهٔ هزارگان را تفسیر نمی‌کند."
+  },
+  {
+    "id": "09-23",
+    "title": "فیلد خالی با فیلد غایب فرق دارد",
+    "code": "import csv\nfrom io import StringIO\ntext = \"order_id,quantity\\nA01,\\nA02\\n\"\nwith StringIO(text, newline=\"\") as source:\n    rows = list(csv.DictReader(source))\nprint(repr(rows[0][\"quantity\"]))\nprint(rows[1][\"quantity\"] is None)\n",
+    "output": "''\nTrue\n",
+    "explanation": "در رکورد اول فیلد وجود دارد اما مقدارش رشتهٔ خالی است. در رکورد دوم تعداد فیلدها کم است و DictReader مقدار None می‌گذارد. اگر فیلد اضافه باشد، در تنظیم پیش‌فرض زیر کلید None جمع می‌شود. این رفتارها خودکار schema را اعتبارسنجی نمی‌کنند؛ پروژه هر دو ناهمخوانی را صریح رد می‌کند. برای مقدار گمشده، جانشانیِ بی‌اجازه با صفر ممنوع است."
+  },
+  {
+    "id": "09-24",
+    "title": "JSON متن است، نه دیکشنری Python",
+    "code": "import json\ntext = '{\"quantity\": 2, \"approved\": true, \"note\": null}'\nrow = json.loads(text)\nprint(row[\"quantity\"], type(row[\"quantity\"]).__name__)\nprint(row[\"approved\"], row[\"note\"])\n",
+    "output": "2 int\nTrue None\n",
+    "explanation": "json.loads متن را به شیء Python تبدیل می‌کند. true و null در JSON به True و None در Python تبدیل می‌شوند؛ این دو زبان را نباید با هم مخلوط کرد. نقل‌قول تک، کامنت و ویرگولِ انتهایی جزو نحو استاندارد JSON نیستند. JSON معتبر هم لزوماً یک سفارش معتبر نیست."
+  },
+  {
+    "id": "09-25",
+    "title": "تبدیل شیء به متن JSON",
+    "code": "import json\nrow = {\"order_id\": \"0012\", \"quantity\": 2, \"note\": None}\ntext = json.dumps(row, ensure_ascii=True, sort_keys=True,\n                  allow_nan=False)\nprint(text)\nprint(json.loads(text) == row)\n",
+    "output": "{\"note\": null, \"order_id\": \"0012\", \"quantity\": 2}\nTrue\n",
+    "explanation": "dumps یک رشته می‌سازد و خودش فایل نمی‌نویسد. sort_keys فقط برای نمایش منظم کلیدهاست و ربطی به مرتب‌کردن رکوردها ندارد. ensure_ascii نویسه‌های غیر ASCII را در نمایش JSON escape می‌کند؛ مترجم زبان نیست و انتخاب کدگذاری فایل را هم به عهده نمی‌گیرد. allow_nan=False از تولید مقادیر غیر استاندارد NaN و Infinity جلوگیری می‌کند."
+  },
+  {
+    "id": "09-26",
+    "title": "load و dump برای جریان فایل",
+    "code": "import json\nfrom pathlib import Path\nfrom tempfile import TemporaryDirectory\nrows = [{\"order_id\": \"A01\", \"quantity\": 2}]\nwith TemporaryDirectory() as folder:\n    path = Path(folder) / \"orders.json\"\n    with path.open(\"x\", encoding=\"utf-8\", newline=\"\\n\") as target:\n        json.dump(rows, target, indent=2, ensure_ascii=True,\n                  allow_nan=False)\n        target.write(\"\\n\")\n    with path.open(\"r\", encoding=\"utf-8\") as source:\n        restored = json.load(source)\n    print(restored == rows)\n",
+    "output": "True\n",
+    "explanation": "load و dump با جریان کار می‌کنند؛ loads و dumps با متن. پسوند s در این دو نام یادآور string است. بازخوانی این مثال نشان می‌دهد مقدارها برای schema کوچک حاضر حفظ شده‌اند؛ برابری همهٔ انواع Python در رفت‌وبرگشت JSON از این مثال نتیجه نمی‌شود."
+  },
+  {
+    "id": "09-27",
+    "title": "رفت‌وبرگشت JSON همیشه بی‌اتلاف نیست",
+    "code": "import json\noriginal = {1: (\"A\", \"B\")}\nrestored = json.loads(json.dumps(original))\nprint(restored)\nprint(restored == original)\n",
+    "output": "{'1': ['A', 'B']}\nFalse\n",
+    "explanation": "کلید عددی به رشته و تاپل به فهرست تبدیل شده است. JSON قالب نگهداری عینِ همهٔ اشیای Python نیست. مجموعه، شیء تاریخ یا یک شیء سفارشی نیز بدون تبدیل قراردادی به JSON معمولی تبدیل نمی‌شود. پروژهٔ ما شناسه و تاریخ را متن و شمارش‌ها را int نگه می‌دارد تا این ابهام‌ها محدود شوند."
+  },
+  {
+    "id": "09-28",
+    "title": "نام تکراری در شیء JSON",
+    "code": "import json\nrow = json.loads('{\"quantity\": 2, \"quantity\": 9}')\nprint(row[\"quantity\"])\n",
+    "output": "9\n",
+    "explanation": "در تنظیم پیش‌فرضِ ماژول json، آخرین مقدارِ نام تکراری باقی می‌ماند. این تکرار با دو سفارش دارای order_id برابر فرق دارد: اولی درون یک شیء JSON است و ممکن است قبل از رسیدن به validator از بین رفته باشد؛ دومی میان رکوردهاست. نسخهٔ آموزشی پروژه تکرار نام‌های درون JSON را کشف نمی‌کند؛ برای ورودی حساس باید parser و سیاست جدا طراحی شود."
+  },
+  {
+    "id": "09-29",
+    "title": "برابری معناییِ CSV و JSON پس از تبدیل",
+    "code": "import csv\nimport json\nfrom io import StringIO\ncsv_text = \"order_id,quantity\\n0012,2\\n\"\njson_text = '[{\"order_id\": \"0012\", \"quantity\": 2}]'\nwith StringIO(csv_text, newline=\"\") as source:\n    csv_rows = list(csv.DictReader(source))\njson_rows = json.loads(json_text)\nprint(csv_rows == json_rows)\ncsv_rows[0][\"quantity\"] = int(csv_rows[0][\"quantity\"])\nprint(csv_rows == json_rows)\n",
+    "output": "False\nTrue\n",
+    "explanation": "پیش از تبدیل نوع، مقدار \"2\" با عدد 2 برابر نیست. پس از تبدیلِ قراردادی، دو نمایش به یک داده می‌رسند. برابری فهرست‌ها ترتیب رکوردها را هم می‌سنجد؛ برابری دیکشنری‌ها به ترتیب کلیدها وابسته نیست. اگر ترتیب رکوردها بخشی از قرارداد نباشد، باید مقایسه با کلید یکتا و کنترل تکرار جدا تعریف شود."
+  },
+  {
+    "id": "09-30",
+    "title": "کارگاه کوچکِ مستقل: فایل تا جمع مبلغ",
+    "code": "import csv\nimport json\nfrom pathlib import Path\nfrom tempfile import TemporaryDirectory\nrows = [\n    {\"order_id\": \"0012\", \"quantity\": 2,\n     \"unit_price_toman\": 100, \"returned_quantity\": 1},\n    {\"order_id\": \"0013\", \"quantity\": 3,\n     \"unit_price_toman\": 50, \"returned_quantity\": 0},\n]\nwith TemporaryDirectory() as folder:\n    root = Path(folder)\n    path = root / \"orders.csv\"\n    with path.open(\"x\", encoding=\"utf-8\", newline=\"\") as target:\n        writer = csv.DictWriter(target, fieldnames=list(rows[0]),\n                                lineterminator=\"\\n\")\n        writer.writeheader()\n        writer.writerows(rows)\n    with path.open(\"r\", encoding=\"utf-8\", newline=\"\") as source:\n        loaded = list(csv.DictReader(source))\n    for row in loaded:\n        for field in [\"quantity\", \"unit_price_toman\", \"returned_quantity\"]:\n            row[field] = int(row[field])\n    gross = sum(row[\"quantity\"] * row[\"unit_price_toman\"]\n                for row in loaded)\n    refund = sum(row[\"returned_quantity\"] * row[\"unit_price_toman\"]\n                 for row in loaded)\n    result = {\"gross_toman\": gross, \"refund_toman\": refund,\n              \"retained_toman\": gross - refund}\n    output = root / \"report.json\"\n    with output.open(\"x\", encoding=\"utf-8\") as target:\n        json.dump(result, target, allow_nan=False)\n    with output.open(\"r\", encoding=\"utf-8\") as source:\n        restored = json.load(source)\n    print(gross, refund, gross - refund)\n    print(restored == result)\n",
+    "output": "350 100 250\nTrue\n",
+    "explanation": "این مثال دو رکوردِ کوچک و متفاوت از دادهٔ اصلی دارد تا جریان فایل تا نتیجه یکجا دیده شود؛ انتظار آن ۳۵۰، ۱۰۰ و ۲۵۰ تومان است. ورودیِ این مثال از قبل معتبر فرض شده است. آن را با پروژهٔ کاملِ ۱۲ سفارش و validator بعدی اشتباه نگیرید. مبلغ پس از مرجوعی هنوز سود نیست و مقایسهٔ شیء نتیجه جای آزمون مستقل محاسبه را نمی‌گیرد."
+  }
+]
