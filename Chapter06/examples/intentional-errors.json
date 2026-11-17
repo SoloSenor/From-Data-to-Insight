@@ -1,0 +1,32 @@
+[
+  {
+    "id": "E01",
+    "exception": "KeyError",
+    "code": "import pandas as pd\nframe = pd.DataFrame({\"category\": [\"Books\"]})\nprint(frame[\"Category\"])\n"
+  },
+  {
+    "id": "E02",
+    "exception": "ValueError",
+    "code": "import pandas as pd\ns = pd.Series([1, 2])\nmask = (s > 0) and (s < 3)\n"
+  },
+  {
+    "id": "E03",
+    "exception": "FileNotFoundError",
+    "code": "import tempfile\nfrom pathlib import Path\nimport pandas as pd\nwith tempfile.TemporaryDirectory() as directory:\n    pd.read_csv(Path(directory) / \"missing.csv\")\n"
+  },
+  {
+    "id": "E04",
+    "exception": "ZeroDivisionError",
+    "code": "total = 0\nshare = 0 / total\n"
+  },
+  {
+    "id": "E05",
+    "exception": "ValueError",
+    "code": "import pandas as pd\nframe = pd.DataFrame({\"category\": [\"Books\", \"Digital\"], \"quantity\": [2]})\n"
+  },
+  {
+    "id": "E06",
+    "exception": "TypeError",
+    "code": "import pandas as pd\nprices = pd.Series([\"unknown\", \"pending\"])\nprint(prices.mean())\n"
+  }
+]

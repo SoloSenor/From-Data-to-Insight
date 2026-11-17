@@ -1,0 +1,146 @@
+[
+  {
+    "id": "C01",
+    "title": "واردکردن ابزارها و یافتن فایل",
+    "code": "from pathlib import Path\nimport numpy as np\nimport pandas as pd\nimport matplotlib\nmatplotlib.use(\"Agg\")\nimport matplotlib.pyplot as plt\n\nROOT = Path.cwd()\nif ROOT.name == \"notebooks\":\n    ROOT = ROOT.parent\nDATA = ROOT / \"data\" / \"orders.csv\"\nprint(DATA.is_file())\n",
+    "output": "True\n"
+  },
+  {
+    "id": "C02",
+    "title": "فهرست و آرایه یک رفتار ندارند",
+    "code": "values = [2, 1, 5]\nquantities = np.array(values, dtype=\"int64\")\nprint(values * 2)\nprint((quantities * 2).tolist())\nprint(quantities.shape)\nprint(str(quantities.dtype))\n",
+    "output": "[2, 1, 5, 2, 1, 5]\n[4, 2, 10]\n(3,)\nint64\n"
+  },
+  {
+    "id": "C03",
+    "title": "Series، مقدار همراه با برچسب",
+    "code": "sample = pd.Series([240000, 800000, 120000],\n                   index=[\"O001\", \"O002\", \"O003\"],\n                   name=\"retained_toman\", dtype=\"int64\")\nprint(sample.to_string())\nprint(int(sample.loc[\"O002\"]))\n",
+    "output": "O001    240000\nO002    800000\nO003    120000\n800000\n"
+  },
+  {
+    "id": "C04",
+    "title": "DataFrame، چند ستون با نام",
+    "code": "mini = pd.DataFrame({\"category\": [\"Books\", \"Digital\"],\n                     \"quantity\": [2, 1]})\nprint(mini.to_string(index=False))\nprint(type(mini[\"quantity\"]).__name__)\nprint(type(mini[[\"quantity\"]]).__name__)\n",
+    "output": "category  quantity\n   Books         2\n Digital         1\nSeries\nDataFrame\n"
+  },
+  {
+    "id": "C05",
+    "title": "خواندن فایل با نوع‌های صریح",
+    "code": "dtypes = {\"order_id\": str, \"order_date\": str, \"category\": str,\n          \"quantity\": \"int64\", \"unit_price_toman\": \"int64\",\n          \"returned_quantity\": \"int64\"}\norders = pd.read_csv(DATA, dtype=dtypes, encoding=\"utf-8\")\nprint(len(orders))\nprint(orders[\"order_id\"].tolist())\n",
+    "output": "12\n['O001', 'O002', 'O003', 'O004', 'O005', 'O006', 'O007', 'O008', 'O009', 'O010', 'O011', 'O012']\n"
+  },
+  {
+    "id": "C06",
+    "title": "دیدن سه سطر نخست",
+    "code": "print(orders.head(3).to_string(index=False))\n",
+    "output": "order_id order_date   category  quantity  unit_price_toman  returned_quantity\n    O001 2026-10-01      Books         2            120000                  0\n    O002 2026-10-01    Digital         1            800000                  0\n    O003 2026-10-02 Stationery         5             30000                  1\n"
+  },
+  {
+    "id": "C07",
+    "title": "شکل و نام ستون‌ها",
+    "code": "print(orders.shape)\nprint(orders.columns.tolist())\n",
+    "output": "(12, 6)\n['order_id', 'order_date', 'category', 'quantity', 'unit_price_toman', 'returned_quantity']\n"
+  },
+  {
+    "id": "C08",
+    "title": "بررسی نوع ستون‌ها",
+    "code": "print(orders.dtypes.to_string())\n",
+    "output": "order_id             object\norder_date           object\ncategory             object\nquantity              int64\nunit_price_toman      int64\nreturned_quantity     int64\n"
+  },
+  {
+    "id": "C09",
+    "title": "چند کنترل ابتدایی قرارداد",
+    "code": "print(orders.isna().sum().to_dict())\nprint(orders[\"order_id\"].is_unique)\nvalid_returns = ((orders[\"returned_quantity\"] >= 0)\n                 & (orders[\"returned_quantity\"] <= orders[\"quantity\"]))\nprint(bool(valid_returns.all()))\n",
+    "output": "{'order_id': 0, 'order_date': 0, 'category': 0, 'quantity': 0, 'unit_price_toman': 0, 'returned_quantity': 0}\nTrue\nTrue\n"
+  },
+  {
+    "id": "C10",
+    "title": "انتخاب دو ستون",
+    "code": "print(orders[[\"order_id\", \"category\"]].head(4).to_string(index=False))\n",
+    "output": "order_id   category\n    O001      Books\n    O002    Digital\n    O003 Stationery\n    O004      Books\n"
+  },
+  {
+    "id": "C11",
+    "title": "فقط سفارش‌های گروه کتاب",
+    "code": "books = orders.loc[orders[\"category\"] == \"Books\",\n                   [\"order_id\", \"quantity\", \"unit_price_toman\"]]\nprint(books.to_string(index=False))\n",
+    "output": "order_id  quantity  unit_price_toman\n    O001         2            120000\n    O004         1            200000\n    O007         3            100000\n    O010         2            150000\n"
+  },
+  {
+    "id": "C12",
+    "title": "دو شرط و یک زیرمجموعهٔ مستقل",
+    "code": "mask = ((orders[\"category\"] == \"Digital\")\n        & (orders[\"returned_quantity\"] > 0))\ndigital_returns = orders.loc[mask, [\"order_id\", \"returned_quantity\"]].copy()\nprint(digital_returns.to_string(index=False))\n",
+    "output": "order_id  returned_quantity\n    O005                  1\n    O011                  1\n"
+  },
+  {
+    "id": "C13",
+    "title": "محاسبهٔ ستونی به‌جای حلقهٔ صریح",
+    "code": "orders[\"gross_toman\"] = orders[\"quantity\"] * orders[\"unit_price_toman\"]\norders[\"refund_toman\"] = (orders[\"returned_quantity\"]\n                           * orders[\"unit_price_toman\"])\norders[\"retained_toman\"] = orders[\"gross_toman\"] - orders[\"refund_toman\"]\nprint(orders.shape)\n",
+    "output": "(12, 9)\n"
+  },
+  {
+    "id": "C14",
+    "title": "ردیابی نتیجه در چهار سفارش نخست",
+    "code": "amount_columns = [\"gross_toman\", \"refund_toman\", \"retained_toman\"]\nprint(orders[[\"order_id\"] + amount_columns].head(4).to_string(index=False))\n",
+    "output": "order_id  gross_toman  refund_toman  retained_toman\n    O001       240000             0          240000\n    O002       800000             0          800000\n    O003       150000         30000          120000\n    O004       200000        200000               0\n"
+  },
+  {
+    "id": "C15",
+    "title": "مجموع سه مبلغ",
+    "code": "totals = orders[amount_columns].sum()\nfor column in amount_columns:\n    print(f\"{column}={int(totals[column])}\")\n",
+    "output": "gross_toman=5020000\nrefund_toman=1430000\nretained_toman=3590000\n"
+  },
+  {
+    "id": "C16",
+    "title": "میانگین به‌ازای همهٔ سفارش‌های ثبت‌شده",
+    "code": "order_count = len(orders)\nmean_retained = orders[\"retained_toman\"].mean()\nprint(f\"orders={order_count}\")\nprint(f\"mean_retained_toman={mean_retained:.2f}\")\n",
+    "output": "orders=12\nmean_retained_toman=299166.67\n"
+  },
+  {
+    "id": "C17",
+    "title": "جمع مبلغ‌ها در هر گروه",
+    "code": "summary = orders.groupby(\"category\", sort=True)[amount_columns].sum()\nprint(summary.to_string())\n",
+    "output": "            gross_toman  refund_toman  retained_toman\ncategory                                             \nBooks           1040000        350000          690000\nDigital         3500000       1050000         2450000\nStationery       480000         30000          450000\n"
+  },
+  {
+    "id": "C18",
+    "title": "رتبه‌بندی بر اساس شاخص منتخب",
+    "code": "summary = summary.sort_values(\"retained_toman\", ascending=False,\n                               kind=\"stable\")\nprint(summary[\"retained_toman\"].to_string())\n",
+    "output": "category\nDigital       2450000\nBooks          690000\nStationery     450000\n"
+  },
+  {
+    "id": "C19",
+    "title": "سهم هر گروه از مبلغ پس از مرجوعی",
+    "code": "total_retained = int(orders[\"retained_toman\"].sum())\nsummary[\"retained_share_pct\"] = (summary[\"retained_toman\"]\n                                  / total_retained * 100)\nprint(summary[[\"retained_toman\", \"retained_share_pct\"]].to_string(\n    float_format=lambda value: f\"{value:.2f}\"))\n",
+    "output": "            retained_toman  retained_share_pct\ncategory                                      \nDigital            2450000               68.25\nBooks               690000               19.22\nStationery          450000               12.53\n"
+  },
+  {
+    "id": "C20",
+    "title": "مقایسهٔ تعداد سفارش و تعداد واحد اولیه",
+    "code": "category_counts = orders.groupby(\"category\").size()\ncategory_units = orders.groupby(\"category\")[\"quantity\"].sum()\nprint(\"order_counts:\")\nprint(category_counts.to_string())\nprint(\"initial_units:\")\nprint(category_units.to_string())\nprint(f\"Digital_order_share_pct={category_counts.loc['Digital'] / len(orders) * 100:.2f}\")\n",
+    "output": "order_counts:\ncategory\nBooks         4\nDigital       4\nStationery    4\ninitial_units:\ncategory\nBooks          8\nDigital        5\nStationery    14\nDigital_order_share_pct=33.33\n"
+  },
+  {
+    "id": "C21",
+    "title": "سه نسبت مرجوعی با سه مخرج متفاوت",
+    "code": "orders_with_return = int((orders[\"returned_quantity\"] > 0).sum())\nreturned_units = int(orders[\"returned_quantity\"].sum())\ninitial_units = int(orders[\"quantity\"].sum())\nrefund_total = int(orders[\"refund_toman\"].sum())\ngross_total = int(orders[\"gross_toman\"].sum())\nprint(f\"orders_with_return={orders_with_return}\")\nprint(f\"returned_units={returned_units}\")\nprint(f\"initial_units={initial_units}\")\nprint(f\"order_return_share_pct={orders_with_return / len(orders) * 100:.2f}\")\nprint(f\"unit_return_share_pct={returned_units / initial_units * 100:.2f}\")\nprint(f\"refund_share_pct={refund_total / gross_total * 100:.2f}\")\n",
+    "output": "orders_with_return=5\nreturned_units=5\ninitial_units=27\norder_return_share_pct=41.67\nunit_return_share_pct=18.52\nrefund_share_pct=28.49\n"
+  },
+  {
+    "id": "C22",
+    "title": "ساخت و ذخیرهٔ نمودار",
+    "code": "OUTPUT = ROOT / \"outputs\"\nOUTPUT.mkdir(exist_ok=True)\nfig, ax = plt.subplots(figsize=(7, 4))\nax.bar(summary.index, summary[\"retained_toman\"] / 1_000_000,\n       color=\"#287D8E\")\nax.set_title(\"Amount after returns by category\")\nax.set_xlabel(\"Category\")\nax.set_ylabel(\"Amount after returns (million toman)\")\nax.set_ylim(bottom=0)\nfig.tight_layout()\nfig.savefig(OUTPUT / \"category-retained.png\", dpi=160)\nplt.close(fig)\nprint(\"Saved: outputs/category-retained.png\")\n",
+    "output": "Saved: outputs/category-retained.png\n"
+  },
+  {
+    "id": "C23",
+    "title": "ذخیرهٔ جدول خلاصه",
+    "code": "summary.to_csv(OUTPUT / \"category-summary.csv\", encoding=\"utf-8\",\n               float_format=\"%.6f\")\nprint(\"Saved: outputs/category-summary.csv\")\nprint(summary.index.name)\n",
+    "output": "Saved: outputs/category-summary.csv\ncategory\n"
+  },
+  {
+    "id": "C24",
+    "title": "کنترل جمع‌ها و سهم‌ها",
+    "code": "assert len(orders) == 12\nassert orders[\"order_id\"].is_unique\nassert bool((orders[\"gross_toman\"] ==\n             orders[\"refund_toman\"] + orders[\"retained_toman\"]).all())\nassert int(orders[\"gross_toman\"].sum()) == 5_020_000\nassert int(orders[\"refund_toman\"].sum()) == 1_430_000\nassert int(orders[\"retained_toman\"].sum()) == 3_590_000\nassert int(summary[\"retained_toman\"].sum()) == total_retained\nassert abs(float(summary[\"retained_share_pct\"].sum()) - 100) < 1e-9\nassert int(summary.loc[\"Books\", \"retained_toman\"]) == 690_000\nprint(\"Checks passed\")\n",
+    "output": "Checks passed\n"
+  }
+]
