@@ -1,0 +1,42 @@
+[
+  {
+    "id": "5",
+    "code": "for position, row in enumerate(orders[:3], start=1):\n    print(position, row[\"order_id\"])\n",
+    "output": "1 O001\n2 O002\n3 O003\n"
+  },
+  {
+    "id": "6",
+    "code": "full_return_ids = [\n    row[\"order_id\"] for row in orders\n    if row[\"returned_quantity\"] == row[\"quantity\"]\n]\nprint(full_return_ids)\n",
+    "output": "['O004', 'O011']\n"
+  },
+  {
+    "id": "7",
+    "code": "quantity_by_id = {row[\"order_id\"]: row[\"quantity\"] for row in orders}\nprint(quantity_by_id[\"O005\"])\n",
+    "output": "2\n"
+  },
+  {
+    "id": "8",
+    "code": "ranked = sorted(orders, key=lambda row: (-row[\"quantity\"], row[\"order_id\"]))\nprint([row[\"order_id\"] for row in ranked[:4]])\n",
+    "output": "['O003', 'O009', 'O006', 'O007']\n"
+  },
+  {
+    "id": "9",
+    "code": "ordered_units = sum(row[\"quantity\"] for row in orders)\nreturned_units = sum(row[\"returned_quantity\"] for row in orders)\nprint(ordered_units, returned_units)\n",
+    "output": "27 5\n"
+  },
+  {
+    "id": "10",
+    "code": "grouped = {}\nfor row in orders:\n    name = row[\"category\"]\n    if name not in grouped:\n        grouped[name] = []\n    grouped[name].append(row)\nfor name in sorted(grouped):\n    print(name, len(grouped[name]))\n",
+    "output": "Books 4\nDigital 4\nStationery 4\n"
+  },
+  {
+    "id": "11",
+    "code": "from copy import deepcopy\noriginal = [{\"order_id\": \"A\", \"tags\": [\"new\"]}]\nchanged = deepcopy(original)\nchanged[0][\"tags\"].append(\"checked\")\nprint(original[0][\"tags\"])\nprint(changed[0][\"tags\"])\n",
+    "output": "['new']\n['new', 'checked']\n"
+  },
+  {
+    "id": "12",
+    "code": "category_totals = {}\nfor row in orders:\n    name = row[\"category\"]\n    kept_units = row[\"quantity\"] - row[\"returned_quantity\"]\n    amount = kept_units * row[\"unit_price_toman\"]\n    category_totals[name] = category_totals.get(name, 0) + amount\nfor name in sorted(category_totals):\n    print(name, category_totals[name])\nprint(\"total\", sum(category_totals.values()))\n",
+    "output": "Books 690000\nDigital 2450000\nStationery 450000\ntotal 3590000\n"
+  }
+]

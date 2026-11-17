@@ -1,0 +1,242 @@
+[
+  {
+    "id": "01",
+    "title": "دو نام، یک شیء",
+    "intro": "انتساب، شیء را تکثیر نمی‌کند. دو نام می‌توانند به همان فهرست اشاره کنند. پیش از اجرا حدس بزنید تغییر از مسیر نام دوم در نام اول دیده می‌شود یا نه.",
+    "code": "values = [10, 20]\nalias = values\nalias.append(30)\nprint(values)\nprint(alias is values)\n",
+    "output": "[10, 20, 30]\nTrue\n",
+    "after": "هر دو نام به یک فهرست اشاره می‌کنند. عمل append محتوای همان شیء را تغییر داده است. عملگر is یکسان‌بودن شیء را بررسی می‌کند؛ برای مقایسهٔ مقدارهای معمول از == استفاده می‌کنیم. به‌ویژه برای عدد و رشته نباید بر رفتار حافظه یا ذخیره‌سازی داخلی تکیه کرد."
+  },
+  {
+    "id": "02",
+    "title": "برابری مقدار با هویت یکی نیست",
+    "intro": "دو ظرف مستقل می‌توانند فعلاً محتوای برابر داشته باشند.",
+    "code": "left = [10, 20]\nright = [10, 20]\nprint(left == right)\nprint(left is right)\nright.append(30)\nprint(left)\n",
+    "output": "True\nFalse\n[10, 20]\n",
+    "after": "برابری اولیه تضمین نمی‌کند دو نام یک شیء باشند. پس از تغییر فهرست دوم، فهرست اول دست‌نخورده است. برای تشخیص None استفاده از is None مناسب است؛ اما این توصیه به معنی استفاده از is برای مقایسهٔ همهٔ مقدارها نیست."
+  },
+  {
+    "id": "03",
+    "title": "کپی کم‌عمق: لایهٔ بیرونی مستقل",
+    "intro": "کپی یک فهرست تخت از عددها برای مستقل‌کردن تغییر جایگاه‌ها کافی است.",
+    "code": "original = [10, 20]\nshallow = original.copy()\nshallow[0] = 99\nprint(original)\nprint(shallow)\nprint(original is shallow)\n",
+    "output": "[10, 20]\n[99, 20]\nFalse\n",
+    "after": "فهرست بیرونی تازه است. جایگزینی عضو اول کپی، جایگاه اول فهرست اصلی را عوض نمی‌کند. عددها خود تغییرپذیر نیستند؛ این مثال هنوز دربارهٔ ظرف‌های داخلی چیزی ثابت نمی‌کند."
+  },
+  {
+    "id": "04",
+    "title": "کپی بیرونی، اشتراک درونی",
+    "intro": "این بار عضو فهرست یک دیکشنری است. کپی سطح اول، دیکشنری داخلی را کپی نمی‌کند.",
+    "code": "source = [{\"order_id\": \"A\", \"tags\": [\"new\"]}]\nshallow = source.copy()\nshallow[0][\"tags\"].append(\"checked\")\nprint(source[0][\"tags\"])\nprint(shallow is source)\nprint(shallow[0] is source[0])\n",
+    "output": "['new', 'checked']\nFalse\nTrue\n",
+    "after": "عمل append به فهرست داخلی رسیده است؛ هر دو مسیر همان داده را می‌بینند. اشتراک ساختار لزوماً خطا نیست، اما باید آگاهانه باشد. همین مسئله برای dict.copy و برش کامل فهرست نیز وجود دارد."
+  },
+  {
+    "id": "05",
+    "title": "کپی هر رکورد هم همیشه کافی نیست",
+    "intro": "در یک فهرست رکورد، کپی‌کردن دیکشنری هر سطر سطح دیگری را مستقل می‌کند، نه همهٔ عمق را.",
+    "code": "source = [{\"order_id\": \"A\", \"tags\": [\"new\"]}]\ncopied_rows = [row.copy() for row in source]\ncopied_rows[0][\"order_id\"] = \"B\"\ncopied_rows[0][\"tags\"].append(\"checked\")\nprint(source[0][\"order_id\"])\nprint(source[0][\"tags\"])\nprint(copied_rows[0] is source[0])\n",
+    "output": "A\n['new', 'checked']\nFalse\n",
+    "after": "شناسهٔ اصلی A مانده، اما برچسب داخلی تغییر کرده است. درک فهرستی را فعلاً به معنای «برای هر سطر، یک کپی بساز» بخوانید؛ ساختار آن را کمی بعد باز می‌کنیم. استقلال باید نسبت به نوع تغییر موردنظر تعریف شود."
+  },
+  {
+    "id": "06",
+    "title": "کپی عمیق برای ظرف‌های داخلی معمول",
+    "intro": "برای این دادهٔ کوچکِ متشکل از فهرست و دیکشنری و مقدارهای ساده، deepcopy نسخه‌ای مستقل برای تغییر داخلی می‌سازد.",
+    "code": "from copy import deepcopy\nsource = [{\"order_id\": \"A\", \"tags\": [\"new\"]}]\nindependent = deepcopy(source)\nindependent[0][\"tags\"].append(\"checked\")\nprint(source[0][\"tags\"])\nprint(independent[0][\"tags\"])\n",
+    "output": "['new']\n['new', 'checked']\n",
+    "after": "واردکردن deepcopy فقط دسترسی به ابزار کتابخانهٔ استاندارد است؛ سازمان‌دهی ماژول‌ها موضوع فصل هشتم است. کپی عمیق راه‌حل همیشگی نیست: زمان و حافظه می‌خواهد، برای منابعی مانند فایل باز نسخهٔ مستقلِ قابل‌استفاده تضمین نمی‌کند و ممکن است اشتراک عمدیِ زیرشیءها را درون کپی حفظ کند. ابتدا تعیین کنید چه چیزی باید مستقل شود."
+  },
+  {
+    "id": "07",
+    "title": "دام تکرار ظرف تغییرپذیر",
+    "intro": "ضرب فهرست، عضو داخلی را سه بار کپی عمیق نمی‌کند؛ ارجاع همان عضو را تکرار می‌کند.",
+    "code": "bad_grid = [[0, 0]] * 3\nbad_grid[0][1] = 7\nprint(bad_grid)\ngood_grid = [[0, 0] for _ in range(3)]\ngood_grid[0][1] = 7\nprint(good_grid)\n",
+    "output": "[[0, 7], [0, 7], [0, 7]]\n[[0, 7], [0, 0], [0, 0]]\n",
+    "after": "در نسخهٔ دوم، عبارت ساخت فهرست در هر تکرار دوباره اجرا می‌شود. زیرخط فقط نامی برای متغیری است که به مقدارش نیاز نداریم؛ دستور ویژه نیست. همین دام در ساخت چند سطل گروه‌بندی با یک فهرست مشترک نیز رخ می‌دهد."
+  },
+  {
+    "id": "08",
+    "title": "ساختار ثابت، عضو تغییرپذیر",
+    "intro": "تغییرناپذیری تاپل به معنی ثابت‌بودن همهٔ اشیای داخل آن نیست.",
+    "code": "record = (\"A\", [\"new\"])\nrecord[1].append(\"checked\")\nprint(record)\n",
+    "output": "('A', ['new', 'checked'])\n",
+    "after": "جایگاه‌های تاپل عوض نشده‌اند؛ عضو دوم همچنان همان فهرست است، اما محتوایش تغییر کرده است. جایگزینی مستقیم یک جایگاه تاپل خطاست؛ نمونهٔ خطا در بخش جداگانه آمده است."
+  },
+  {
+    "id": "09",
+    "title": "بازگشت به داده‌های فصل ششم",
+    "intro": "همان دوازده سفارش ساختگی را این بار در فهرستی از دیکشنری‌ها قرار می‌دهیم. این شکل نمایش، تحلیل را از خواندن فایل جدا می‌کند. ترتیب اولیه، ترتیب ثبت سفارش‌هاست.",
+    "code": "orders = [\n    {'order_id': 'O001', 'order_date': '2026-10-01', 'category': 'Books', 'quantity': 2, 'unit_price_toman': 120000, 'returned_quantity': 0},\n    {'order_id': 'O002', 'order_date': '2026-10-01', 'category': 'Digital', 'quantity': 1, 'unit_price_toman': 800000, 'returned_quantity': 0},\n    {'order_id': 'O003', 'order_date': '2026-10-02', 'category': 'Stationery', 'quantity': 5, 'unit_price_toman': 30000, 'returned_quantity': 1},\n    {'order_id': 'O004', 'order_date': '2026-10-02', 'category': 'Books', 'quantity': 1, 'unit_price_toman': 200000, 'returned_quantity': 1},\n    {'order_id': 'O005', 'order_date': '2026-10-03', 'category': 'Digital', 'quantity': 2, 'unit_price_toman': 450000, 'returned_quantity': 1},\n    {'order_id': 'O006', 'order_date': '2026-10-03', 'category': 'Stationery', 'quantity': 3, 'unit_price_toman': 50000, 'returned_quantity': 0},\n    {'order_id': 'O007', 'order_date': '2026-10-04', 'category': 'Books', 'quantity': 3, 'unit_price_toman': 100000, 'returned_quantity': 0},\n    {'order_id': 'O008', 'order_date': '2026-10-04', 'category': 'Digital', 'quantity': 1, 'unit_price_toman': 1200000, 'returned_quantity': 0},\n    {'order_id': 'O009', 'order_date': '2026-10-05', 'category': 'Stationery', 'quantity': 4, 'unit_price_toman': 25000, 'returned_quantity': 0},\n    {'order_id': 'O010', 'order_date': '2026-10-05', 'category': 'Books', 'quantity': 2, 'unit_price_toman': 150000, 'returned_quantity': 1},\n    {'order_id': 'O011', 'order_date': '2026-10-06', 'category': 'Digital', 'quantity': 1, 'unit_price_toman': 600000, 'returned_quantity': 1},\n    {'order_id': 'O012', 'order_date': '2026-10-06', 'category': 'Stationery', 'quantity': 2, 'unit_price_toman': 40000, 'returned_quantity': 0},\n]\nprint(len(orders))\nprint(orders[0][\"order_id\"], orders[0][\"category\"])\n",
+    "output": "12\nO001 Books\n",
+    "after": "هر سطر یک سفارش تک‌قلمی است؛ همهٔ مقدارهای رکوردها عدد صحیح یا رشته‌اند و ظرف داخلی ندارند. فایل JSON همراه فقط مرجع تبادل داده است؛ برای اجرای مثال‌ها نیازی به خواندن آن نیست. تاریخ در این فصل فقط متن است و تحلیل زمانی انجام نمی‌شود."
+  },
+  {
+    "id": "10",
+    "title": "شماره‌گذاری گزارش با enumerate",
+    "intro": "وقتی هم شمارهٔ نمایشی و هم خود رکورد لازم است، enumerate خواناتر از نگه‌داشتن شمارندهٔ دستی است.",
+    "code": "for number, row in enumerate(orders[:3], start=1):\n    print(number, row[\"order_id\"])\n",
+    "output": "1 O001\n2 O002\n3 O003\n",
+    "after": "شروع از یک فقط شمارهٔ خروجی enumerate را تغییر می‌دهد؛ اندیس فهرست همچنان از صفر است. شمارهٔ نمایشی، شناسهٔ پایدار سفارش نیست: با فیلتر یا مرتب‌سازی عوض می‌شود. بازکردن زوج در دو نام همان الگوی unpacking است."
+  },
+  {
+    "id": "11",
+    "title": "پیمایش دیکشنری با items",
+    "intro": "برای دریافت کلید و مقدار با هم از items استفاده می‌کنیم، نه از شمارندهٔ موقعیت.",
+    "code": "sample = {\"order_id\": \"O001\", \"category\": \"Books\"}\nfor field, value in sample.items():\n    print(field, value)\n",
+    "output": "order_id O001\ncategory Books\n",
+    "after": "در Python مرجع کتاب، دیکشنری ترتیب درج را نگه می‌دارد. این ترتیب به معنی مرتب‌بودن الفبایی کلیدها نیست. برای تغییر ساختاریِ دیکشنری هنگام پیمایش مستقیم، مسیر جداگانه بسازید؛ افزودن یا حذف کلید حین پیمایش می‌تواند RuntimeError بدهد."
+  },
+  {
+    "id": "12",
+    "title": "جفت‌کردن دنباله‌ها با zip",
+    "intro": "zip عضوهای هم‌موقعیت را کنار هم قرار می‌دهد. برابری طول دو فهرست کافی نیست؛ ترتیب معنایی آنها هم باید هم‌تراز باشد.",
+    "code": "codes = [\"A\", \"B\", \"C\"]\nquantities = [2, 5, 1]\nfor code, quantity in zip(codes, quantities, strict=True):\n    print(code, quantity)\n",
+    "output": "A 2\nB 5\nC 1\n",
+    "after": "strict=True در Python 3.10 به بعد موجود است. در این کتاب روی Python 3.11 آزموده شده است. اگر طول‌ها متفاوت باشند، هنگام مصرف زوج‌ها ValueError ایجاد می‌شود؛ نه لزوماً در لحظهٔ ساخت zip. این کنترل نمی‌فهمد که مثلاً فهرست دوم به‌اشتباه مستقل مرتب شده است."
+  },
+  {
+    "id": "13",
+    "title": "zip معمولی کوتاه می‌آید",
+    "intro": "رفتار پیش‌فرض zip توقف در کوتاه‌ترین دنباله است؛ ممکن است بدون هیچ استثنایی داده کنار گذاشته شود.",
+    "code": "pairs = zip([\"A\", \"B\", \"C\"], [2, 5])\nprint(list(pairs))\nprint(list(pairs))\n",
+    "output": "[('A', 2), ('B', 5)]\n[]\n",
+    "after": "سطر دوم خالی است چون همین iterator قبلاً مصرف شده است. برای پیمایش دوباره، zip را دوباره بسازید یا اگر داده کوچک است نتیجه را در فهرست نگه دارید. zip و enumerate همهٔ نتیجه را از پیش به صورت فهرست نمی‌سازند. strict فقط وقتی کنترل می‌شود که مصرف به محل اختلاف برسد؛ توقف زودهنگام می‌تواند اختلاف انتهایی را پنهان کند."
+  },
+  {
+    "id": "14",
+    "title": "از حلقهٔ روشن به درک فهرستی",
+    "intro": "ابتدا تبدیل را با حلقه می‌نویسیم، سپس همان معنا را به شکل درک فهرستی بیان می‌کنیم.",
+    "code": "values = [2, 5, 1]\nscaled_loop = []\nfor value in values:\n    scaled_loop.append(value * 10)\nscaled_comp = [value * 10 for value in values]\nprint(scaled_loop)\nprint(scaled_loop == scaled_comp)\n",
+    "output": "[20, 50, 10]\nTrue\n",
+    "after": "فرمول ذهنی این است: «چه بسازم، از کدام عضوها، با چه شرطی؟». عبارت ابتدای درک، عضو خروجی را می‌سازد و بخش for منبع را معرفی می‌کند. درک فهرستی فوراً یک فهرست می‌سازد و برای دادهٔ بسیار بزرگ ممکن است حافظهٔ زیادی بخواهد؛ کوتاه‌تر بودن تضمین سریع‌تر بودن نیست."
+  },
+  {
+    "id": "15",
+    "title": "فیلتر سفارش‌های دارای مرجوعی",
+    "intro": "شرط انتهای درک تعیین می‌کند کدام رکوردها اصلاً وارد خروجی شوند.",
+    "code": "returned_ids = [\n    row[\"order_id\"] for row in orders\n    if row[\"returned_quantity\"] > 0\n]\nprint(returned_ids)\n",
+    "output": "['O003', 'O004', 'O005', 'O010', 'O011']\n",
+    "after": "این خروجی پنج سفارش دارای حداقل یک واحد مرجوعی را نشان می‌دهد، نه تعداد کل واحدهای برگشتی. تفاوت شمارش سفارش و جمع تعداد کالا همچنان پابرجاست. ترتیب خروجی همان ترتیب ورودی باقی می‌ماند."
+  },
+  {
+    "id": "16",
+    "title": "فیلتر با انتخاب دو مقدار فرق دارد",
+    "intro": "شرط داخل عبارت می‌تواند برای هر عضو یکی از دو مقدار را بسازد، بدون اینکه طول خروجی کم شود.",
+    "code": "labels = [\n    \"returned\" if row[\"returned_quantity\"] > 0 else \"kept\"\n    for row in orders[:4]\n]\nprint(labels)\n",
+    "output": "['kept', 'kept', 'returned', 'returned']\n",
+    "after": "شرط انتهای درک عضو را حذف می‌کند؛ عبارت شرطی در ابتدای آن یک مقدار انتخاب می‌کند. kept در این برچسب‌گذاری فقط یعنی «هیچ واحد مرجوعی ثبت نشده»، نه تأیید کیفیت، وصول پول یا سودآوری. عبارت‌های شرطی تو‌در‌توی طولانی را به شرط و تابع روشن تبدیل کنید."
+  },
+  {
+    "id": "17",
+    "title": "درک دیکشنری برای نمایهٔ شناسه",
+    "intro": "وقتی می‌خواهیم از شناسه مستقیم به رکورد برسیم، دیکشنری ابزار مناسبی است؛ به شرط اینکه شناسه‌ها یکتا باشند.",
+    "code": "by_id = {row[\"order_id\"]: row for row in orders}\nprint(len(by_id))\nprint(by_id[\"O005\"][\"category\"])\nprint(by_id[\"O005\"] is orders[4])\n",
+    "output": "12\nDigital\nTrue\n",
+    "after": "مقدارهای این نمایه همان رکوردهای اصلی‌اند، نه کپی آنها. اگر از مسیر نمایه یک رکورد را تغییر دهیم، orders هم آن تغییر را می‌بیند. نمایه برای جست‌وجو ساخته شده، نه به‌عنوان تضمین استقلال. همچنین ساخت نمایه مانع ورود کلید تکراری نمی‌شود."
+  },
+  {
+    "id": "18",
+    "title": "بازنویسی بی‌صدای کلید تکراری",
+    "intro": "این نمونه عمداً از شناسهٔ تکراری استفاده می‌کند؛ کد اجرا می‌شود ولی یک رکورد در نمایه باقی نمی‌ماند.",
+    "code": "duplicate_rows = [\n    {\"order_id\": \"A\", \"quantity\": 1},\n    {\"order_id\": \"A\", \"quantity\": 9},\n]\nunsafe_index = {row[\"order_id\"]: row for row in duplicate_rows}\nprint(len(duplicate_rows), len(unsafe_index))\nprint(unsafe_index[\"A\"][\"quantity\"])\n",
+    "output": "2 1\n9\n",
+    "after": "آخرین مقدار کلید A جای مقدار قبلی را گرفته است. این رفتار خطای اجرایی نیست؛ اگر قرارداد داده یکتایی شناسه باشد، نقض قرارداد است. مقایسهٔ طول نمایه و ورودی یا کنترل صریح پیش از انتساب می‌تواند آن را آشکار کند. حذف تکراری‌ها نیازمند تصمیم مستند است؛ نباید خودکار آخرین رکورد را حقیقت بدانیم."
+  },
+  {
+    "id": "19",
+    "title": "ساخت نمایه با کنترل یکتایی",
+    "intro": "در این تابع، برای شناسهٔ تکراری تصمیم صریح می‌گیریم: توقف با ValueError، نه بازنویسی پنهان.",
+    "code": "def index_unique(rows):\n    index = {}\n    for row in rows:\n        order_id = row[\"order_id\"]\n        if order_id in index:\n            raise ValueError(\"Duplicate order_id\")\n        index[order_id] = row\n    return index\n\nchecked_index = index_unique(orders)\nprint(len(checked_index))\nprint(index_unique([]))\n",
+    "output": "12\n{}\n",
+    "after": "raise خطا را آگاهانه ایجاد می‌کند؛ مدیریت استثنا و traceback در فصل نهم مفصل می‌آید. این تابع فقط تکرار کلید را کنترل می‌کند، نه کامل‌بودن schema و معتبر بودن قیمت و تعدادها. همچنین نمایه همچنان ارجاع‌های رکوردها را نگه می‌دارد. ورودی این تابع دنباله‌ای از رکوردهای معتبر با شناسهٔ رشته‌ای است."
+  },
+  {
+    "id": "20",
+    "title": "مرتب‌سازی با تابع کلید",
+    "intro": "مرتب‌کردن رکوردها را بر اساس یک ویژگی تعریف می‌کنیم. تابع کلید برای هر رکورد مقدار قابل‌مقایسه را برمی‌گرداند.",
+    "code": "def quantity_key(row):\n    return row[\"quantity\"]\n\nranked_quantity = sorted(orders, key=quantity_key, reverse=True)\nprint([row[\"order_id\"] for row in ranked_quantity[:4]])\nprint(orders[0][\"order_id\"])\n",
+    "output": "['O003', 'O009', 'O006', 'O007']\nO001\n",
+    "after": "ورودی تغییر ترتیب نداده است. برای تعدادهای برابر، مرتب‌سازی پایدار ترتیب قبلی را حفظ می‌کند؛ بنابراین O006 پیش از O007 مانده است. sorted فهرست تازه می‌سازد اما رکوردهای داخلی را عمیق کپی نمی‌کند. reverse جهت ترتیب را عوض می‌کند، نه معنای شاخص را."
+  },
+  {
+    "id": "21",
+    "title": "lambda فقط یک تابع کوچک است",
+    "intro": "اگر تابع کلید بسیار ساده است، می‌توان آن را با lambda نوشت. برای منطق چندمرحله‌ای همان def روشن‌تر است.",
+    "code": "ranked_lambda = sorted(\n    orders, key=lambda row: row[\"quantity\"], reverse=True\n)\nprint([row[\"order_id\"] for row in ranked_lambda[:4]])\nprint(ranked_lambda[0] is orders[2])\n",
+    "output": "['O003', 'O009', 'O006', 'O007']\nTrue\n",
+    "after": "در lambda نام row ورودی است و عبارت پس از دونقطه مقدار برگشتی را می‌سازد. این تابع نام مستقل ندارد. خروجی دوم یادآوری می‌کند مرتب‌سازی، ظرف تازه‌ای از ارجاع رکوردها می‌سازد؛ تغییر رکورد خروجی می‌تواند دادهٔ اصلی را عوض کند."
+  },
+  {
+    "id": "22",
+    "title": "کلید چندجزئی و شکستن تساوی",
+    "intro": "برای مرتب‌سازی تعداد نزولی و شناسهٔ صعودی، کلید را یک تاپل می‌گیریم. این بار ترتیب معکوس ورودی نباید ترتیب شناسه‌های هم‌تعداد را تعیین کند.",
+    "code": "ranked_ties = sorted(\n    orders[::-1],\n    key=lambda row: (-row[\"quantity\"], row[\"order_id\"]),\n)\nprint([row[\"order_id\"] for row in ranked_ties[:6]])\n",
+    "output": "['O003', 'O009', 'O006', 'O007', 'O001', 'O005']\n",
+    "after": "تاپل‌ها جزءبه‌جزء مقایسه می‌شوند: اول تعداد منفی، سپس شناسه. منفی‌کردن اینجا مخصوص مقدار عددی است و راه عمومی برای نزولی‌کردن متن نیست. reverse=True روی کل تاپل جهت همهٔ مؤلفه‌ها را معکوس می‌کند؛ برای جهت‌های متفاوت باید کلید یا چند مرتب‌سازی پایدار را درست طراحی کرد."
+  },
+  {
+    "id": "23",
+    "title": "sort نتیجهٔ فهرست را برنمی‌گرداند",
+    "intro": "وقتی تغییر ترتیب خود ظرف مجاز است، sort مناسب است؛ اما مقدار برگشتی آن None است.",
+    "code": "small = [3, 1, 2]\nresult = small.sort()\nprint(small)\nprint(result)\n",
+    "output": "[1, 2, 3]\nNone\n",
+    "after": "نباید نتیجهٔ sort را به جای فهرست ذخیره کرد و انتظار پیمایش داشت. تغییر درجا می‌تواند به همهٔ نام‌هایی که به همان فهرست اشاره دارند دیده شود؛ اگر باید ترتیب ورودی بماند از sorted استفاده کنید."
+  },
+  {
+    "id": "24",
+    "title": "غنی‌سازی رکورد بدون تغییر ورودی",
+    "intro": "برای هر سفارش یک دیکشنری تازه می‌سازیم و مبلغ اولیه، بازپرداخت و مبلغ پس از مرجوعی را به آن اضافه می‌کنیم.",
+    "code": "enriched = []\nfor row in orders:\n    item = row.copy()\n    gross = row[\"quantity\"] * row[\"unit_price_toman\"]\n    refund = row[\"returned_quantity\"] * row[\"unit_price_toman\"]\n    item[\"gross_toman\"] = gross\n    item[\"refund_toman\"] = refund\n    item[\"retained_toman\"] = gross - refund\n    enriched.append(item)\nprint(enriched[0][\"retained_toman\"])\nprint(\"retained_toman\" in orders[0])\n",
+    "output": "240000\nFalse\n",
+    "after": "چون فیلدهای موجود این داده همه مقدارهای ساده‌اند و فقط فیلدهای سطح اول اضافه می‌کنیم، کپی هر دیکشنری برای این کار کافی است. این ادعا به همهٔ داده‌های تو‌در‌تو تعمیم ندارد. مبلغ پس از مرجوعی سود نیست؛ هزینه، مالیات و تخفیف در این سناریو نداریم. اگر بعداً تعداد یا قیمت عوض شود، مبلغ ذخیره‌شده خودکار دوباره محاسبه نمی‌شود."
+  },
+  {
+    "id": "25",
+    "title": "تجمیع خوانا با انبارهٔ دیکشنری",
+    "intro": "برای هر گروه یک مبلغ انباشته نگه می‌داریم. اینجا get با صفر مجاز است چون گروهِ هنوز دیده‌نشده در جمع ما از صفر شروع می‌کند، نه اینکه دادهٔ نامعلوم را صفر فرض کنیم.",
+    "code": "totals = {}\nfor row in enriched:\n    category = row[\"category\"]\n    totals[category] = totals.get(category, 0) + row[\"retained_toman\"]\nfor category, amount in sorted(totals.items()):\n    print(category, amount)\n",
+    "output": "Books 690000\nDigital 2450000\nStationery 450000\n",
+    "after": "کلیدهای خروجی برای نمایش قطعی مرتب شده‌اند. این کار جمع قیمت واحد نیست؛ مقدار کالا و مرجوعی قبلاً در مبلغ هر سفارش لحاظ شده‌اند. برای محاسبات چندمرحله‌ای، حلقه از یک درک پیچیده و دارای اثر جانبی روشن‌تر است. خروجی اینجا فقط گروه‌های مشاهده‌شده را دارد."
+  },
+  {
+    "id": "26",
+    "title": "سهم گروه‌ها با مخرج روشن",
+    "intro": "سهم اینجا نسبت مبلغ پس از مرجوعی هر گروه به جمع همان مبلغ در همهٔ گروه‌هاست.",
+    "code": "grand_total = sum(totals.values())\nshares = {\n    category: amount / grand_total\n    for category, amount in totals.items()\n} if grand_total else {}\nprint(grand_total)\nfor category in sorted(shares):\n    print(category, f\"{shares[category]:.2%}\")\n",
+    "output": "3590000\nBooks 19.22%\nDigital 68.25%\nStationery 12.53%\n",
+    "after": "اگر جمع مبلغ صفر باشد، در این نسخهٔ نمایشی دیکشنری سهم خالی است: سهم تعریف نشده و خروجی باید همین قرارداد را توضیح دهد، نه سهم صفر جعلی بسازد. در کارگاه تابع‌محور، برای هر گروه سهم None ثبت می‌کنیم تا نام گروه‌ها از بین نرود. این سهم، سهم تعداد سفارش یا سهم تعداد واحد نیست. قالب‌بندی دو رقم اعشار فقط نمایش را گرد می‌کند."
+  },
+  {
+    "id": "27",
+    "title": "گروه‌بندی رکوردها با ظرف مستقل",
+    "intro": "گاهی به جای فقط جمع، خود رکوردهای هر گروه لازم‌اند. برای هر گروه در اولین برخورد یک فهرست تازه بسازید.",
+    "code": "groups = {}\nfor row in orders:\n    category = row[\"category\"]\n    if category not in groups:\n        groups[category] = []\n    groups[category].append(row)\nprint([(name, len(groups[name])) for name in sorted(groups)])\nprint(groups[\"Books\"] is groups[\"Digital\"])\n",
+    "output": "[('Books', 4), ('Digital', 4), ('Stationery', 4)]\nFalse\n",
+    "after": "فهرست گروه‌ها مستقل‌اند اما رکوردهای داخلشان همان رکوردهای اصلی هستند. dict.fromkeys با یک فهرست خالی مشترک انتخاب مناسبی برای این کار نیست. شمارش چهار سفارش در هر گروه، به معنی برابری تعداد واحد یا مبلغ نیست."
+  },
+  {
+    "id": "28",
+    "title": "تخت‌کردن یک لایه با حلقهٔ روشن",
+    "intro": "برای نمونه‌ای از سفارش چندقلمی، فهرست قلم‌ها را به ردیف‌های قابل‌بررسی تبدیل می‌کنیم. این داده از سفارش‌های تک‌قلمی کارگاه جداست.",
+    "code": "baskets = [\n    {\"order_id\": \"A\", \"items\": [{\"sku\": \"P1\"}, {\"sku\": \"P2\"}]},\n    {\"order_id\": \"B\", \"items\": []},\n]\nlines = []\nfor basket in baskets:\n    for item in basket[\"items\"]:\n        lines.append((basket[\"order_id\"], item[\"sku\"]))\nprint(lines)\n",
+    "output": "[('A', 'P1'), ('A', 'P2')]\n",
+    "after": "این خروجی دو قلم دارد، اما ورودی دو سفارش دارد و سفارش B بدون قلم در خروجی دیده نمی‌شود. پس از تخت‌کردن، واحد مشاهده عوض شده است؛ len خروجی را تعداد سفارش نخوانید. یک درک با دو for هم ممکن است، اما حلقهٔ تو‌در‌توی کوتاه برای آغاز خواناتر است. این کار فقط همین یک لایه را تخت می‌کند."
+  },
+  {
+    "id": "29",
+    "title": "حذف ایمن با ساخت خروجی تازه",
+    "intro": "به جای حذف عضو از همان فهرستی که روی آن حرکت می‌کنیم، خروجی فیلترشده می‌سازیم.",
+    "code": "numbers = [0, 0, 1, 2]\nkept = [value for value in numbers if value != 0]\nprint(kept)\nprint(numbers)\n",
+    "output": "[1, 2]\n[0, 0, 1, 2]\n",
+    "after": "حذف درجا هنگام پیمایش می‌تواند باعث ردشدن از بعضی عضوها شود، بی‌آنکه خطایی رخ دهد. فیلتر تازه، هم رفتار را روشن می‌کند و هم ورودی را نگه می‌دارد. اگر اعضا خود ظرف باشند، این روش همچنان کپی عمیق نیست."
+  },
+  {
+    "id": "30",
+    "title": "گزارش نهایی و کنترل سازگاری",
+    "intro": "اکنون گزارش گروهی را بر اساس مبلغ نزولی رتبه‌بندی می‌کنیم. مرتب‌سازی دیکشنری با items زوج‌های گروه و مبلغ را در کنار هم نگه می‌دارد.",
+    "code": "gross_total = sum(row[\"gross_toman\"] for row in enriched)\nrefund_total = sum(row[\"refund_toman\"] for row in enriched)\nretained_total = sum(row[\"retained_toman\"] for row in enriched)\nranking = sorted(totals.items(), key=lambda pair: (-pair[1], pair[0]))\nprint(\"gross_toman\", gross_total)\nprint(\"refund_toman\", refund_total)\nprint(\"retained_toman\", retained_total)\nprint(\"balanced\", gross_total - refund_total == retained_total)\nfor rank, (category, amount) in enumerate(ranking, start=1):\n    print(rank, category, amount)\n",
+    "output": "gross_toman 5020000\nrefund_toman 1430000\nretained_toman 3590000\nbalanced True\n1 Digital 2450000\n2 Books 690000\n3 Stationery 450000\n",
+    "after": "در sum، عبارت داخل پرانتز یک عبارت مولد است: مقدارها را برای مصرف یکی‌یکی می‌دهد و فهرست میانی نمی‌سازد. معرفی کامل مولدها خارج از دامنهٔ این فصل است؛ فعلاً این الگوی سادهٔ جمع را بشناسید. درست‌بودن تراز مالی، به‌تنهایی قیمت و تعداد ورودی را تأیید نمی‌کند. نتیجه با فصل ششم یکسان است، اما این بار مسیر محاسبه فقط بر ساختارهای پایهٔ پایتون تکیه دارد."
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "tuple-assignment",
+    "type": "TypeError",
+    "code": "record = (\"A\", 1)\nrecord[0] = \"B\"\n"
+  },
+  {
+    "id": "strict-zip",
+    "type": "ValueError",
+    "code": "list(zip([\"A\", \"B\"], [1], strict=True))\n"
+  },
+  {
+    "id": "missing-key",
+    "type": "KeyError",
+    "code": "row = {\"order_id\": \"A\"}\nprint(row[\"quantity\"])\n"
+  },
+  {
+    "id": "dict-size",
+    "type": "RuntimeError",
+    "code": "fields = {\"a\": 1}\nfor name in fields:\n    fields[\"b\"] = 2\n"
+  },
+  {
+    "id": "mixed-sort",
+    "type": "TypeError",
+    "code": "sorted([1, \"2\"])\n"
+  },
+  {
+    "id": "duplicate-id",
+    "type": "ValueError",
+    "code": "def index_unique(rows):\n    index = {}\n    for row in rows:\n        key = row[\"order_id\"]\n        if key in index:\n            raise ValueError(\"Duplicate order_id\")\n        index[key] = row\n    return index\nindex_unique([{\"order_id\": \"A\"}, {\"order_id\": \"A\"}])\n"
+  }
+]
