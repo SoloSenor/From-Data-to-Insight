@@ -1,0 +1,5 @@
+source = (value for value in [30, 10, 20])
+ordered = sorted(source)
+print(ordered)
+print(list(source))
+print(type(ordered).__name__)

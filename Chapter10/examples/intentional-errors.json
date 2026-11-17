@@ -1,0 +1,74 @@
+[
+  {
+    "id": "E01",
+    "title": "درخواست پس از پایان",
+    "code": "source = iter([])\nnext(source)\n",
+    "exception": "StopIteration",
+    "output": "",
+    "reason": "next بدون پیش‌فرض در پایان این استثنا را اعلام می‌کند. این مثال خطای نحوی نیست.",
+    "fix": "از حلقهٔ for یا next با نشانهٔ مناسب استفاده کنید؛ پایان طبیعیِ مولد را با return بنویسید."
+  },
+  {
+    "id": "E02",
+    "title": "دو بار مصرف یک منبع",
+    "code": "source = iter([10, 20])\nprint(sum(source))\nprint(sum(source))\n",
+    "exception": null,
+    "output": "30\n0\n",
+    "reason": "هیچ استثنایی رخ نمی‌دهد، ولی نتیجهٔ دوم به سؤال اولیه جواب نمی‌دهد.",
+    "fix": "دو شاخص را در یک گذر محاسبه کنید یا ورودی محدود را آگاهانه ذخیره کنید."
+  },
+  {
+    "id": "E03",
+    "title": "ناسازگاری طول در zip",
+    "code": "pairs = zip([\"A\", \"B\"], [1], strict=True)\nprint(next(pairs))\nprint(next(pairs))\n",
+    "exception": "ValueError",
+    "output": "('A', 1)\n",
+    "reason": "زوج نخست پیش از تشخیص کمبود منبع دوم تولید شده است؛ strict تضمین تراکنش نیست.",
+    "fix": "اثر جانبیِ هر زوج را پیش از اطمینان از قرارداد کنترل کنید. strict هم‌ترازی کلیدها را ثابت نمی‌کند."
+  },
+  {
+    "id": "E04",
+    "title": "فهرست مشترک در سطح کلاس",
+    "code": "class Batch:\n    notes = []\nfirst = Batch()\nsecond = Batch()\nfirst.notes.append(\"checked\")\nprint(second.notes)\n",
+    "exception": null,
+    "output": "['checked']\n",
+    "reason": "هر دو نمونه فهرست یکسانِ کلاسی را می‌بینند.",
+    "fix": "برای یادداشت مستقل، self.notes = [] را در __init__ قرار دهید."
+  },
+  {
+    "id": "E05",
+    "title": "مولد وابسته به فایل بسته",
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\nwith TemporaryDirectory() as folder:\n    path = Path(folder) / \"input.txt\"\n    path.write_text(\"one\", encoding=\"utf-8\")\n    with path.open(encoding=\"utf-8\") as source:\n        lines = (line.strip() for line in source)\n    print(next(lines))\n",
+    "exception": "ValueError",
+    "output": "",
+    "reason": "بدنهٔ عبارت مولد بعد از خروج از with سراغ فایل می‌رود؛ فایل بسته است.",
+    "fix": "مصرف را داخل with انجام دهید، یا with را داخل مولد قرار دهید و بستن زودهنگامش را مدیریت کنید."
+  },
+  {
+    "id": "E06",
+    "title": "انتظار خطای فوری از مولد",
+    "code": "def checked(size):\n    if size <= 0:\n        raise ValueError(\"invalid size\")\n    yield size\nsource = checked(0)\nprint(\"created\")\nnext(source)\n",
+    "exception": "ValueError",
+    "output": "created\n",
+    "reason": "اعتبارسنجی بدنه تا زمان مصرف به تأخیر افتاده است.",
+    "fix": "اگر خطای فوری لازم است، تابع بیرونی معمولی بنویسید که پس از اعتبارسنجی مولد داخلی را بسازد."
+  },
+  {
+    "id": "E07",
+    "title": "بازنویسی فیلد frozen",
+    "code": "from dataclasses import dataclass\n@dataclass(frozen=True)\nclass Amount:\n    gross: int\namount = Amount(100)\namount.gross = 200\n",
+    "exception": "FrozenInstanceError",
+    "output": "",
+    "reason": "انتساب معمول به فیلد frozen ممنوع است.",
+    "fix": "شیء تازه بسازید یا مدل تغییرپذیر مناسبی انتخاب کنید؛ frozen تضمین اعتبار عددی یا تغییرناپذیری عمیق نیست."
+  },
+  {
+    "id": "E08",
+    "title": "اشتباه‌گرفتن راهنمای نوع با اعتبارسنجی",
+    "code": "from dataclasses import dataclass\n@dataclass\nclass Amount:\n    gross: int\namount = Amount(\"wrong\")\nprint(type(amount.gross).__name__)\n",
+    "exception": null,
+    "output": "str\n",
+    "reason": "راهنمای int در زمان اجرای معمول، سازنده را به اعتبارسنج خودکار تبدیل نکرده است.",
+    "fix": "برای قرارداد لازم، کنترل زمان اجرا یا ابزار اعتبارسنجیِ آگاهانه نیاز است. این فصل چارچوب عمومی ارائه نمی‌کند."
+  }
+]

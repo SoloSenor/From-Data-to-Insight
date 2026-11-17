@@ -1,0 +1,242 @@
+[
+  {
+    "id": "C01",
+    "title": "فضای نامِ روشن با import",
+    "intro": "فصل هشتم سازوکار import را معرفی کرد. اینجا مسئلهٔ ما انتخاب ابزار و خوانایی وابستگی است: نام ماژول کمک می‌کند منشأ تابع را ببینیم.",
+    "code": "import math\nprint(math.isqrt(81))\nprint(math.isclose(0.1 + 0.2, 0.3))\n",
+    "output": "9\nTrue\n",
+    "explanation": "تابع isqrt ریشهٔ صحیح را به‌صورت عدد صحیح می‌دهد؛ تابع isclose برابری دقیق نیست و معیار نزدیکی دارد. واردکردن math به‌معنای چسباندن متن فایل ماژول به برنامه نیست. برای آزمایش عددهای نزدیک صفر، معمولاً باید abs_tol متناسب با واحد و مسئله تعیین شود؛ پیش‌فرض نسبی به‌تنهایی کافی نیست. استفاده از نام ماژول، وابستگی را جلوی چشم خواننده نگه می‌دارد."
+  },
+  {
+    "id": "C02",
+    "title": "واردکردن ابزار مشخص از statistics",
+    "intro": "اگر معنای نام‌ها روشن و تعداد ابزارها کم است، واردکردن نام مشخص نیز مناسب است. ابزار درست را پس از فهم سؤال انتخاب می‌کنیم.",
+    "code": "from statistics import mean, median\nvalues = [10, 12, 14, 100]\nprint(mean(values))\nprint(median(values))\n",
+    "output": "34\n13.0\n",
+    "explanation": "این اختلاف، اثر مشاهدهٔ بزرگ بر میانگین را نشان می‌دهد، نه اینکه میانه همیشه بهتر است. واحد هر دو همان واحد داده است. این مثال کوچک، آموزش استنباط آماری نیست. تابع mean جای بررسی مقدار گمشده، واحد مخلوط یا نمونه‌گیری نامناسب را نمی‌گیرد. نام mean را بعداً با یک عدد بازنویسی نکنید؛ در آن صورت دیگر نام تابع در آن فضای نام نیست."
+  },
+  {
+    "id": "C03",
+    "title": "تاریخ به‌عنوان شیء، نه رشتهٔ ظاهراً مرتب",
+    "intro": "تاریخ معتبر رفتار تقویمی دارد. کم‌کردن دو رشتهٔ شبیه تاریخ تعریف نشده است، اما دو شیء date اختلاف روزها را می‌دانند.",
+    "code": "from datetime import date, timedelta\nstart = date.fromisoformat(\"2024-02-28\")\nend = date.fromisoformat(\"2024-03-01\")\nprint((end - start).days)\nprint((start + timedelta(days=2)).isoformat())\n",
+    "output": "2\n2024-03-01\n",
+    "explanation": "دو روز بودن فاصله به سال کبیسه مربوط است. date تاریخ میلادیِ بدون ساعت و منطقهٔ زمانی است، نه تاریخ شمسی و نه یک لحظهٔ زمانی جهانی. تبدیل تقویم، timezone و تاریخ‌های مبهم موضوع این نمونه نیستند. fromisoformat در Python 3.11 چند شکل ISO را می‌پذیرد؛ برای قرارداد دقیق YYYY-MM-DD همان کنترل بازتولید isoformat فصل نهم لازم است."
+  },
+  {
+    "id": "C04",
+    "title": "Decimal و قرارداد نمایش عدد",
+    "intro": "برای بعضی محاسبه‌های ده‌دهی، Decimal انتخاب آگاهانه‌تری است. ورودی متنی باعث می‌شود اعشار موردنظر را مستقیماً وارد کنیم.",
+    "code": "from decimal import Decimal\nprint(0.1 + 0.2 == 0.3)\nprint(Decimal(\"0.1\") + Decimal(\"0.2\"))\nprint(Decimal(\"12.345\").quantize(Decimal(\"0.01\")))\n",
+    "output": "False\n0.3\n12.34\n",
+    "explanation": "گردکردن خط آخر در زمینهٔ پیش‌فرض این اجرا ROUND_HALF_EVEN است؛ سیاست مالی باید صریحاً تعیین شود. Decimal ساخته‌شده از float، تقریب دودویی موجود را وارد می‌کند. Decimal هم دقت زمینه و قواعد گردکردن دارد و همهٔ مسائل عددی را خودکار حل نمی‌کند. در پروژهٔ سفارش‌ها قیمت صحیح به تومان است و برای همان قرارداد به Decimal نیاز نداریم. ابزار تازه نباید واحد داده را بی‌دلیل عوض کند."
+  },
+  {
+    "id": "C05",
+    "title": "تکرارپذیر و دو تکرارگر مستقل",
+    "intro": "فهرست را می‌توان دوباره پیمود. هر فراخوانی iter روی این فهرست یک وضعیت پیمایش مستقل می‌سازد؛ خود داده‌ها الزاماً کپی نمی‌شوند.",
+    "code": "values = [10, 20, 30]\nleft = iter(values)\nright = iter(values)\nprint(next(left), next(left), next(right))\nprint(list(left))\nprint(values)\n",
+    "output": "10 20 10\n[30]\n[10, 20, 30]\n",
+    "explanation": "left دو گام جلو رفته و right فقط یک گام. list(left) باقی‌ماندهٔ همان پیمایش را مصرف می‌کند، نه اینکه از اول فهرست شروع کند. وضعیت پیمایش را از وضعیت ظرف جدا کنید. تغییر ظرف هنگام پیمایش ممکن است نتیجه را تغییر دهد یا در بعضی ظرف‌ها خطا بدهد؛ مستقل‌بودن تکرارگر معادل snapshot مستقل از داده نیست."
+  },
+  {
+    "id": "C06",
+    "title": "تکرارگر تک‌مصرف است",
+    "intro": "یک تابع می‌تواند روی فهرست درست کار کند و روی تکرارگر نتیجهٔ ناقص بدهد. مسئله در اینجا خطای نحوی نیست؛ مصرف ورودی است.",
+    "code": "source = iter([2, 3, 5])\nprint(iter(source) is source)\nprint(sum(source))\nprint(sum(source))\n",
+    "output": "True\n10\n0\n",
+    "explanation": "در قرارداد iterator، iter همان تکرارگر را برمی‌گرداند. جمع دوم صفر است چون چیزی باقی نمانده، نه چون مجموع اصلی صفر بوده است. برای دو شاخص از یک ورودی تک‌مصرف، هر دو را در یک حلقه حساب کنید، یا با تصمیم آگاهانه ورودی را materialize کنید. تبدیل به list هزینهٔ حافظه دارد و باید قبل از تمام‌شدن داده انجام شود."
+  },
+  {
+    "id": "C07",
+    "title": "range مولد نیست",
+    "intro": "کم‌حافظه بودن یک شیء به‌تنهایی آن را generator نمی‌کند. طبقه‌بندی دقیق به ما می‌گوید چه عملیاتی انتظار داشته باشیم.",
+    "code": "values = range(2, 8, 2)\nprint(type(values).__name__)\nprint(values[1], len(values))\nprint(list(values))\nprint(list(values))\nprint(iter(values) is values)\n",
+    "output": "range\n4 3\n[2, 4, 6]\n[2, 4, 6]\nFalse\n",
+    "explanation": "range یک دنبالهٔ تکرارپذیر است و عناصر را به‌صورت یک فهرست کامل نگه نمی‌دارد. قابل اندیس‌گذاری و قابل پیمایش مجدد است. generator معمولی این دو ویژگی را ندارد. در برخی منابع قدیمی، range به‌طور غیر دقیق مولد نامیده شده است؛ در این کتاب، رفتار واقعی Python 3 ملاک تفکیک است."
+  },
+  {
+    "id": "C08",
+    "title": "next با مقدار پیش‌فرض",
+    "intro": "گاهی نبودن عنصر بعدی یک پایان طبیعی است. آرگومان دوم next اجازه می‌دهد بدون تولید استثنا آن را تشخیص دهیم.",
+    "code": "source = iter([None, 7])\nmissing = object()\nprint(next(source, missing) is None)\nprint(next(source, missing))\nprint(next(source, missing) is missing)\n",
+    "output": "True\n7\nTrue\n",
+    "explanation": "از None به‌عنوان پایان استفاده نکردیم، چون در این داده یک مقدار واقعی است. object یک نشانهٔ هویتی خصوصی می‌سازد و مقایسه با is است. هر بار next وضعیت پیمایش را جلو می‌برد؛ درخواست آزمایشی هم بی‌اثر نیست. بدون آرگومان پیش‌فرض، پایان عادی با StopIteration اعلام می‌شود. حلقهٔ for این پایان را در سازوکار خود مدیریت می‌کند."
+  },
+  {
+    "id": "C09",
+    "title": "پیمایش هم‌زمان با قرارداد طول",
+    "intro": "در تحلیل داده، کنار هم قرارگرفتن دو فهرست به معنای هم‌ترازی واقعی نیست. strict فقط بخشی از قرارداد را کنترل می‌کند.",
+    "code": "ids = [\"B01\", \"B02\"]\ncounts = [4, 6]\nfor position, (batch_id, count) in enumerate(\n        zip(ids, counts, strict=True), start=1):\n    print(position, batch_id, count)\n",
+    "output": "1 B01 4\n2 B02 6\n",
+    "explanation": "zip و enumerate خودشان تکرارگرند؛ ساختنشان همهٔ داده را مصرف نمی‌کند. strict=True ناسازگاری طول را هنگام پیمایش تشخیص می‌دهد، نه لزوماً هنگام ساخت zip. این گزینه از Python 3.10 در دسترس است. برابری طول هرگز ثابت نمی‌کند که B01 به شمارش درست وصل شده است؛ برای اتصال معنایی معمولاً کلید مشترک لازم است."
+  },
+  {
+    "id": "C10",
+    "title": "sorted یک مصرف‌کنندهٔ کامل است",
+    "intro": "زنجیرهٔ تنبل ممکن است به یک گام غیرتنبل برسد. sorted برای مرتب‌سازی کلی باید همهٔ ورودی محدود را مصرف کند.",
+    "code": "source = (value for value in [30, 10, 20])\nordered = sorted(source)\nprint(ordered)\nprint(list(source))\nprint(type(ordered).__name__)\n",
+    "output": "[10, 20, 30]\n[]\nlist\n",
+    "explanation": "خروجی sorted فهرست تازه است. پس اگر ورودی از فایلِ بزرگ بیاید، صرف مولد بودن مراحل قبل مانع مصرف حافظهٔ این مرحله نمی‌شود. روی ورودی نامتناهی، مرتب‌سازی کامل پایان نمی‌یابد. برای نمایش چند مورد نخست، اول مشخص کنید «نخست در ترتیب ورود» می‌خواهید یا «بزرگ‌ترین‌ها در کل داده»؛ این دو سؤال الگوریتم متفاوت دارند."
+  },
+  {
+    "id": "C11",
+    "title": "مصرف ناقص در any",
+    "intro": "مصرف‌کننده‌ها همیشه همهٔ ورودی را نمی‌خوانند. توقف زودهنگام هم مزیت دارد و هم بر وضعیت تکرارگر اثر می‌گذارد.",
+    "code": "source = iter([0, 0, 5, 8])\nprint(any(source))\nprint(list(source))\nprint(all([]), any([]))\n",
+    "output": "True\n[8]\nTrue False\n",
+    "explanation": "any تا اولین مقدار truthy می‌رود و all تا اولین مقدار falsy. تهی بودن داده با «همه معتبرند» از نظر تجاری یکی نیست؛ all روی ورودی تهی True می‌دهد. بنابراین کنترل وجود رکورد را جدا بنویسید. مصرف ناقصِ یک مولد فایل‌خوان به مدیریت قطعی منبع هم نیاز دارد؛ به آن در مثال هجدهم برمی‌گردیم."
+  },
+  {
+    "id": "C12",
+    "title": "map و filter تنبل‌اند",
+    "intro": "استفاده از یک ابزار تابعی فقط وقتی مفید است که خوانایی را بهتر کند. همین تبدیل را اغلب می‌توان با عبارت مولد خواناتر نوشت.",
+    "code": "values = [1, 2, 3, 4]\nselected = filter(lambda value: value % 2 == 0, values)\nscaled = map(lambda value: value * 10, selected)\nprint(next(scaled))\nprint(list(scaled))\nprint(list(scaled))\n",
+    "output": "20\n[40]\n[]\n",
+    "explanation": "lambda اینجا تابع کوچکِ بی‌نام برای یک عبارت است؛ محل مناسبی برای منطق چندمرحله‌ای نیست. map و filter فهرست نمی‌سازند و در این نمونه تک‌مصرف‌اند. کوتاه‌نویسی معیار برتری نیست: اگر شرط یا تبدیل نیاز به نام و توضیح دارد، تابع معمولی بهتر است. قاعدهٔ مهم، روشن‌بودن مصرف و قرارداد ورودی است."
+  },
+  {
+    "id": "C13",
+    "title": "عبارت مولد در برابر فهرست‌سازی",
+    "intro": "دو شکل ظاهراً مشابه در زمان انجام کار و امکان پیمایش دوباره تفاوت دارند.",
+    "code": "values = [2, 4, 6]\neager = [value * 2 for value in values]\nlazy = (value * 2 for value in values)\nprint(type(eager).__name__, type(lazy).__name__)\nprint(sum(lazy), sum(lazy))\nprint(sum(eager), sum(eager))\n",
+    "output": "list generator\n24 0\n24 24\n",
+    "explanation": "فهرست خروجی محاسبه را اکنون نگه می‌دارد؛ مولد هر مقدار را هنگام درخواست تولید می‌کند. اما این مثال هنوز فهرست values را در حافظه دارد. جایگزینی براکت با پرانتز نه ورودی قبلی را حذف می‌کند و نه به‌خودی‌خود برنامه را سریع‌تر می‌کند. برای مقایسهٔ کارایی باید حجم داده، هزینهٔ تبدیل و الگوی مصرف را بسنجیم، نه تنها اندازهٔ خود شیء مولد را."
+  },
+  {
+    "id": "C14",
+    "title": "تابع مولد و نقطهٔ تعلیق yield",
+    "intro": "برای فهم lazy بودن، زمان اجرا را قابل مشاهده می‌کنیم. ساخت شیء مولد با اجرای بدنهٔ تابع فرق دارد.",
+    "code": "def steps():\n    print(\"started\")\n    yield 10\n    print(\"resumed\")\n    yield 20\n\nsource = steps()\nprint(\"created\")\nprint(next(source))\nprint(next(source))\n",
+    "output": "created\nstarted\n10\nresumed\n20\n",
+    "explanation": "وجود yield در بدنه، این تابع را generator function می‌کند. فراخوانی steps شیء generator می‌سازد؛ بدنه در نخستین درخواست شروع می‌شود. در yield وضعیت محلی حفظ و اجرای بدنه معلق می‌شود. پس از دومین مقدار هم پایان بدنه هنوز در next بعدی مشخص می‌شود. متغیرهای محلی و ارجاع‌های نگه‌داشته‌شده تا زمان مناسب می‌توانند زنده بمانند؛ تنبلی به معنی نداشتن وضعیت نیست."
+  },
+  {
+    "id": "C15",
+    "title": "return در مولد یعنی پایان",
+    "intro": "مولد می‌تواند شرط توقف اختصاصی داشته باشد. yield مقدار بعدی را تحویل می‌دهد؛ return بدون مقدار پایان می‌دهد.",
+    "code": "def until_negative(values):\n    for value in values:\n        if value < 0:\n            return\n        yield value\n\nprint(list(until_negative([3, 0, -1, 9])))\nprint(list(until_negative([])))\n",
+    "output": "[3, 0]\n[]\n",
+    "explanation": "صفر در این قرارداد یک دادهٔ عادی است و فقط مقدار منفی پایان می‌دهد. مقدار ۹ هرگز تولید نمی‌شود. این تصمیم باید معنای دامنه داشته باشد؛ استفادهٔ تصادفی از یک مقدار واقعی به‌عنوان علامت پایان خطرناک است. برای پایان طبیعی، درون مولد صریحاً StopIteration پرتاب نکنید؛ در Python جدید می‌تواند به RuntimeError تبدیل شود. return راه روشن این الگوست."
+  },
+  {
+    "id": "C16",
+    "title": "yield from برای واگذاری پیمایش",
+    "intro": "اگر هدف تحویل‌دادن عناصر یک تکرارپذیر دیگر است، yield from یک الگوی مستقیم است؛ نه میان‌بری برای همهٔ توابع.",
+    "code": "def combined():\n    yield \"header\"\n    yield from [10, 20]\n    yield from (value * 2 for value in [3, 4])\n\nprint(list(combined()))\n",
+    "output": "['header', 10, 20, 6, 8]\n",
+    "explanation": "در حد این فصل، yield from را تحویل عناصر منبعِ زیرین می‌خوانیم. به‌کاربردن yield به‌تنهایی روی یک فهرست، خود فهرست را یک عنصر تحویل می‌دهد؛ yield from عناصر آن را یکی‌یکی می‌دهد. سازوکارهای پیشرفتهٔ send و throw و coroutine در دامنهٔ فصل نیستند. یک منبع نامتناهی در میانهٔ این تابع مانع رسیدن به مراحل بعد می‌شود."
+  },
+  {
+    "id": "C17",
+    "title": "تنبلی و تغییر مقدار بیرونی",
+    "intro": "تنبلی می‌تواند زمان مشاهدهٔ مقدار را عوض کند. این خطای منطقی رایج است، چون ساختن مولد از نظر ظاهری شبیه ثبت نتیجه به نظر می‌رسد.",
+    "code": "factor = 2\nvalues = [1, 2]\nsource = (factor * value for value in values)\nfactor = 10\nprint(list(source))\n",
+    "output": "[10, 20]\n",
+    "explanation": "ضرب در زمان مصرف انجام شده و factor آن زمان ۱۰ است. این نتیجه به معنی کپی‌شدن همهٔ متغیرها در زمان ساخت نیست. عبارت تکرارپذیرِ بیرونی یک generator expression هنگام ساخت ارزیابی می‌شود، ولی محاسبهٔ عنصر و شرط‌ها عموماً هنگام مصرف‌اند. اگر snapshot می‌خواهید باید مرز تثبیت مقدار را آگاهانه بسازید؛ صرف تابع‌کردن کد هم لزوماً کپی عمیق داده نمی‌سازد."
+  },
+  {
+    "id": "C18",
+    "title": "مولد فایل‌خوان و بستن زودهنگام",
+    "intro": "فایل باید تا هنگام مصرف باز بماند. قرار دادن with داخل مولد طول عمر فایل را به طول عمر پیمایش مرتبط می‌کند.",
+    "code": "from contextlib import closing\nfrom pathlib import Path\nfrom tempfile import TemporaryDirectory\n\ndef iter_lines(path):\n    with path.open(encoding=\"utf-8\") as source:\n        for line in source:\n            yield line.rstrip(\"\\n\")\n\nwith TemporaryDirectory() as folder:\n    path = Path(folder) / \"values.txt\"\n    path.write_text(\"first\\nsecond\\n\", encoding=\"utf-8\")\n    with closing(iter_lines(path)) as lines:\n        print(next(lines))\n    print(list(lines))\n",
+    "output": "first\n[]\n",
+    "explanation": "پس از خروج از closing، close مولد فراخوانی می‌شود و with داخلی فایل را می‌بندد. این الگو برای generator دارای close است، نه هر Iterable دلخواه. break به‌تنهایی تضمین عمومیِ بستن قطعی هر iterator نیست. بدون مصرف کامل، نگه‌داشتن ارجاع به مولد می‌تواند منبع را باز نگه دارد. خط نادرستِ رایج آن است که از درون with یک generator expression وابسته به فایل را return کنیم و سپس بیرون with بخوانیم؛ فایل پیش‌تر بسته شده است."
+  },
+  {
+    "id": "C19",
+    "title": "Counter برای شمارش، نه جمع مبلغ",
+    "intro": "شمارش تعداد رکورد در هر دسته با جمع قیمت یا تعداد واحد کالا متفاوت است. نام شاخص را پیش از انتخاب ابزار مشخص کنید.",
+    "code": "from collections import Counter\ncategories = [\"Books\", \"Digital\", \"Books\", \"Stationery\"]\ncounts = Counter(categories)\nprint(sorted(counts.items()))\nprint(counts[\"Missing\"])\nprint(\"Missing\" in counts)\n",
+    "output": "[('Books', 2), ('Digital', 1), ('Stationery', 1)]\n0\nFalse\n",
+    "explanation": "Counter بر اساس دفعات حضور همین عناصر ساخته شده است. مقدار صفر برای کلید غایب باعث ایجاد آن کلید نمی‌شود. شمار سفارش با تعداد کالا و مبلغ سفارش سه کمیت جدا هستند. برای خروجی پایدار، ترتیب را صریح تعیین کرده‌ایم. ترتیب تساوی‌ها در most_common از ترتیب نخستین مشاهده اثر می‌گیرد؛ اگر قرارداد تجاریِ مستقل می‌خواهید مرتب‌سازی چندمعیارهٔ خودتان را بنویسید."
+  },
+  {
+    "id": "C20",
+    "title": "defaultdict و اثر خواندن کلید غایب",
+    "intro": "یک ابزار کمکی ممکن است خواندن ظاهری را به تغییر وضعیت تبدیل کند. دانستن این رفتار در اشکال‌زدایی مهم است.",
+    "code": "from collections import defaultdict\ntotals = defaultdict(int)\nprint(totals.get(\"Books\"))\nprint(\"Books\" in totals)\nprint(totals[\"Books\"])\nprint(\"Books\" in totals)\ntotals[\"Books\"] += 120\nprint(dict(totals))\n",
+    "output": "None\nFalse\n0\nTrue\n{'Books': 120}\n",
+    "explanation": "فراخوانی get از کارخانهٔ پیش‌فرض استفاده نمی‌کند، اما دسترسی با براکت به کلید غایب، مقدار می‌سازد و ثبت می‌کند. به defaultdict تابع int را می‌دهیم، نه نتیجهٔ int(). اگر کارخانه تعیین نشود، دسترسی به کلید غایب KeyError می‌دهد؛ ادعای برخی متن‌های قدیمی دربارهٔ مقدار خودکار None دقیق نیست. برای ثبت خروجی معمولاً dict معمولی مرز روشن‌تری می‌سازد."
+  },
+  {
+    "id": "C21",
+    "title": "islice و chain: پیش‌نمایش با مصرف محدود",
+    "intro": "برای دیدن چند عنصر نخست، همهٔ جریان را به list تبدیل نمی‌کنیم. با این حال پیش‌نمایش هم ورودی را جلو می‌برد.",
+    "code": "from itertools import chain, count, islice\nsource = count(10, 2)\nprint(list(islice(source, 3)))\nprint(next(source))\nprint(list(chain([1, 2], [3], [])))\n",
+    "output": "[10, 12, 14]\n16\n[1, 2, 3]\n",
+    "explanation": "count اینجا منبع نامتناهی است و islice مصرف را محدود کرده است. list(count(...)) پایان نمی‌یابد و می‌تواند حافظه را تمام کند؛ آن را اجرا نکنید. chain عناصر منابع را به‌ترتیب تحویل می‌دهد و مرتب‌سازی یا ادغام بر اساس کلید انجام نمی‌دهد. islice نیز snapshot بی‌اثر نیست: منبع تا همان نقطه مصرف شده است. محدودکردن نمایش با محدودکردن دامنهٔ تحلیل یکی نیست."
+  },
+  {
+    "id": "C22",
+    "title": "groupby فقط گروه‌های متوالی را می‌سازد",
+    "intro": "نام یک ابزار ممکن است شبیه ابزار دیگری در pandas یا SQL باشد، ولی قرارداد یکسانی نداشته باشد.",
+    "code": "from itertools import groupby\nvalues = [\"A\", \"A\", \"B\", \"A\"]\nfor key, group in groupby(values):\n    print(key, list(group))\n",
+    "output": "A ['A', 'A']\nB ['B']\nA ['A']\n",
+    "explanation": "دو گروه A داریم چون یک B بین آنها آمده است. این ابزار کل داده را برای پیدا کردن کلیدهای برابر جست‌وجو نمی‌کند. برای گروه‌بندی کلی می‌توان داده را با همان کلید مرتب کرد، یا در یک گذر از دیکشنری انباره استفاده کرد. مرتب‌سازی کامل هزینهٔ حافظه و زمان دارد؛ گروه‌بندی دیکشنری نیز به تعداد کلیدهای متمایز حافظه می‌خواهد. هیچ گزینه‌ای بدون دانستن سؤال برنده نیست."
+  },
+  {
+    "id": "C23",
+    "title": "گروه‌بندی پس از مرتب‌سازی",
+    "intro": "اگر واقعاً همهٔ رکوردهای هم‌کلید را کنار هم می‌خواهیم، پیش‌شرط لازم را صریح ایجاد می‌کنیم.",
+    "code": "from itertools import groupby\nfrom operator import itemgetter\nrows = [(\"B\", 3), (\"A\", 2), (\"A\", 5)]\nkey = itemgetter(0)\nfor category, group in groupby(sorted(rows, key=key), key=key):\n    print(category, sum(row[1] for row in group))\n",
+    "output": "A 7\nB 3\n",
+    "explanation": "itemgetter(0) یک callable برای برداشتن جزء اول می‌سازد؛ همان نقش lambda row: row[0] را دارد. گروه‌های groupby از منبع مشترک استفاده می‌کنند. گروه را پیش از جلو رفتن به گروه بعدی مصرف کنید؛ نگه‌داشتن iterator گروه برای مصرف بعدی می‌تواند به خروجی خالی برسد. اگر نیاز به نگهداری دارید باید دادهٔ گروه را آگاهانه materialize کنید و هزینه‌اش را بپذیرید."
+  },
+  {
+    "id": "C24",
+    "title": "دسته‌بندی جریان با اندازهٔ محدود",
+    "intro": "برای تبدیل یا ارسال دسته‌ای، می‌توان فقط یک دستهٔ کوچک را نگه داشت. این نسخه برای Python 3.11 نوشته شده و به batched نسخه‌های جدید متکی نیست.",
+    "code": "from itertools import islice\n\ndef chunks(values, size):\n    if type(size) is not int or size <= 0:\n        raise ValueError(\"size must be a positive integer\")\n    source = iter(values)\n    while True:\n        batch = tuple(islice(source, size))\n        if not batch:\n            return\n        yield batch\n\nprint(list(chunks(range(7), 3)))\n",
+    "output": "[(0, 1, 2), (3, 4, 5), (6,)]\n",
+    "explanation": "دستهٔ آخر ممکن است کوتاه باشد. بررسی size داخل بدنهٔ مولد است و تا نخستین مصرف اجرا نمی‌شود؛ اگر اعتبارسنجی فوری لازم است باید پوستهٔ معمولی بنویسیم که مولد داخلی را برگرداند. خود chunks یک دسته را نگه می‌دارد، اما list دور آن در این نمایش کوچک همهٔ دسته‌ها را جمع می‌کند. در مصرف واقعی برای هر دسته داخل حلقه پردازش کنید. این تابع خودش منبع ورودی را close نمی‌کند."
+  },
+  {
+    "id": "C25",
+    "title": "کلاس، نمونه و ویژگی",
+    "intro": "هدفِ شی‌گرایی در این کتاب فهم API و مدل‌کردن وضعیت لازم است، نه تبدیل هر دیکشنری به یک کلاس.",
+    "code": "class Batch:\n    def __init__(self, batch_id, tested):\n        self.batch_id = batch_id\n        self.tested = tested\n\nfirst = Batch(\"B01\", 80)\nsecond = Batch(\"B02\", 120)\nprint(first.batch_id, first.tested)\nprint(second.batch_id, second.tested)\nprint(first is second)\n",
+    "output": "B01 80\nB02 120\nFalse\n",
+    "explanation": "Batch کلاس است و first و second دو نمونهٔ آن‌اند. self پارامتر قراردادیِ اشاره به نمونه است، نه واژهٔ رزروشده. __init__ نمونهٔ ساخته‌شده را مقداردهی اولیه می‌کند و نباید یک مقدار دلخواه برگرداند. این کلاس هنوز هیچ اعتبارسنجی ندارد: اسم فیلد و شکل سازنده دلیل معتبر بودن tested نیست. اگر تنها هدف حمل دادهٔ کوچک است، دیکشنری یا dataclass هم ممکن است کافی باشد."
+  },
+  {
+    "id": "C26",
+    "title": "متد و اتصال نمونه",
+    "intro": "متد معمولی یک تابع در تعریف کلاس است که هنگام دسترسی از نمونه، آن نمونه را برای پارامتر نخست دریافت می‌کند.",
+    "code": "class Batch:\n    def __init__(self, tested, rejected):\n        self.tested = tested\n        self.rejected = rejected\n\n    def rejection_rate(self):\n        if self.tested == 0:\n            return None\n        return self.rejected / self.tested\n\nbatch = Batch(80, 4)\nprint(batch.rejection_rate())\nprint(Batch.rejection_rate(batch))\nprint(Batch(0, 0).rejection_rate())\n",
+    "output": "0.05\n0.05\nNone\n",
+    "explanation": "دو فراخوانی نخست در این مثال نتیجهٔ یکسان دارند؛ شکل نخست معمول‌تر است. این متد محاسبه می‌کند و چاپ نمی‌کند. None در مخرج صفر یعنی نرخ در این قرارداد تعریف نشده، نه نرخ صفر. منفی نبودن و رابطهٔ rejected و tested هنوز کنترل نشده‌اند؛ این کلاس برای دادهٔ ازپیش‌معتبر است. راهنمای نوع هم اگر افزوده شود، به‌تنهایی این کنترل را انجام نمی‌دهد."
+  },
+  {
+    "id": "C27",
+    "title": "ظرف تغییرپذیر باید متعلق به نمونه باشد",
+    "intro": "یکی از دام‌های کلاس، اشتراک ناخواستهٔ فهرست در سطح کلاس است. نسخهٔ صحیح در __init__ ظرف تازه می‌سازد.",
+    "code": "class Batch:\n    def __init__(self, batch_id):\n        self.batch_id = batch_id\n        self.notes = []\n\nfirst = Batch(\"B01\")\nsecond = Batch(\"B02\")\nfirst.notes.append(\"checked\")\nprint(first.notes)\nprint(second.notes)\nprint(first.notes is second.notes)\n",
+    "output": "['checked']\n[]\nFalse\n",
+    "explanation": "اگر notes = [] را در بدنهٔ کلاس و بیرون __init__ بگذاریم، نمونه‌هایی که ویژگی جدا ندارند همان فهرست کلاسی را می‌بینند. هر بار ساخت نمونه در این نسخه، یک فهرست مستقل می‌سازد. این اصل شبیه دام پارامتر پیش‌فرض تغییرپذیر فصل هشتم است، اما محل و زمان ساخت شیء فرق دارد. صفت کلاسی برای ثابت یا وضعیت عمداً مشترک می‌تواند درست باشد؛ مسئله اشتراک ناخواسته است."
+  },
+  {
+    "id": "C28",
+    "title": "نام دوم، نمونهٔ دوم نیست",
+    "intro": "قواعد ارجاع فصل هفتم در مورد نمونه‌های کلاس هم برقرارند. کلاس، انتساب را به کپی تبدیل نمی‌کند.",
+    "code": "class Reading:\n    def __init__(self, value):\n        self.value = value\n\noriginal = Reading(12)\nalias = original\nindependent = Reading(original.value)\nalias.value = 15\nprint(original.value, independent.value)\nprint(alias is original)\n",
+    "output": "15 12\nTrue\n",
+    "explanation": "alias و original دو نام برای یک شیء هستند. independent یک نمونهٔ تازه با مقدار اولیهٔ مشابه است؛ در این مثال فیلد فقط عدد است. اگر فیلد یک فهرست بود، ساخت نمونهٔ تازه با همان فهرست الزاماً دادهٔ داخلی را مستقل نمی‌کرد. کپی سطحی و عمیق همان تفاوت‌های قبلی را دارند. بنابراین واژهٔ «نسخهٔ مستقل» باید سطح استقلال را مشخص کند."
+  },
+  {
+    "id": "C29",
+    "title": "dataclass برای دادهٔ ساختاریافتهٔ کوچک",
+    "intro": "مسیر تکمیلی: یک decorator آماده می‌تواند بخشی از کد تکراری سازنده و نمایش را تولید کند. لازم نیست اکنون سازوکار نوشتن decorator را بیاموزیم.",
+    "code": "from dataclasses import dataclass\n\n@dataclass(frozen=True)\nclass Amount:\n    gross: int\n    refund: int\n\n    def retained(self):\n        return self.gross - self.refund\n\namount = Amount(500, 120)\nprint(amount)\nprint(amount.retained())\nprint(amount == Amount(500, 120))\n",
+    "output": "Amount(gross=500, refund=120)\n380\nTrue\n",
+    "explanation": "dataclass به‌طور معمول __init__ و نمایش و برابری مبتنی بر فیلدها را می‌سازد. frozen جلوی انتساب معمول به فیلد را می‌گیرد، نه هر تغییر عمیق در هر شیء داخلی و نه هر دستکاری عمدی را. راهنمای int در اینجا مقدار منفی یا ورودی رشته‌ای را خودکار رد نمی‌کند. برای فهرست پیش‌فرض در dataclass باید default_factory مناسب داشت؛ از این ابزار به‌عنوان جایگزین قرارداد معتبر استفاده نکنید."
+  },
+  {
+    "id": "C30",
+    "title": "دو شاخص، یک گذر",
+    "intro": "پیش از پروژهٔ کامل، خط اصلی طراحی را در یک تابع کوچک می‌بینیم: تعداد و جمع را از همان پیمایش به دست آوریم.",
+    "code": "def summarize(values):\n    count = 0\n    total = 0\n    for value in values:\n        count += 1\n        total += value\n    average = total / count if count else None\n    return count, total, average\n\nsource = (value for value in [10, 20, 30])\nprint(summarize(source))\nprint(summarize(source))\nprint(summarize([]))\n",
+    "output": "(3, 60, 20.0)\n(0, 0, None)\n(0, 0, None)\n",
+    "explanation": "این تابع ورودی را دقیقاً یک بار می‌پیماید. دوباره‌دادن همان مولدِ مصرف‌شده، مجموعهٔ تهی می‌دهد. count و total وضعیت کوچکِ کافی برای این دو شاخص‌اند، اما برای میانهٔ دقیقِ عمومی یا تشخیص یکتایی همهٔ شناسه‌ها وضعیت بیشتری لازم است. نام «جریانی» باید به الگوریتم و کل مسیر مربوط باشد، نه فقط به وجود yield در یک فایل."
+  }
+]

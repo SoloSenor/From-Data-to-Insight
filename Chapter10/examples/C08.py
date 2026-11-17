@@ -1,0 +1,5 @@
+source = iter([None, 7])
+missing = object()
+print(next(source, missing) is None)
+print(next(source, missing))
+print(next(source, missing) is missing)

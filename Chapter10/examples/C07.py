@@ -1,0 +1,6 @@
+values = range(2, 8, 2)
+print(type(values).__name__)
+print(values[1], len(values))
+print(list(values))
+print(list(values))
+print(iter(values) is values)

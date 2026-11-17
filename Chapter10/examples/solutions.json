@@ -1,0 +1,98 @@
+[
+  {
+    "id": "P01",
+    "title": "نام‌ها را شفاف کنید",
+    "task": "با واردکردن خود ماژول statistics، میانگین و میانهٔ سه مقدار ۴، ۶ و ۲۰ را چاپ کنید. نام تابع‌های داخلی یا نام ماژول را بازنویسی نکنید.",
+    "code": "import statistics\nvalues = [4, 6, 20]\nprint(statistics.mean(values))\nprint(statistics.median(values))\n",
+    "output": "10\n6\n",
+    "note": "خروجی بزرگ‌تر میانگین در این مثال، دلیل عمومیِ انتخاب میانه نیست. پاسخ دربارهٔ همین داده است."
+  },
+  {
+    "id": "P02",
+    "title": "دو شاخص از تکرارگر",
+    "task": "تابعی بنویسید که تعداد و جمع اعداد غیرمنفی را در یک گذر محاسبه کند. ورودی منفی را نادیده بگیرید و ورودی تهی را بپذیرید.",
+    "code": "def summarize_nonnegative(values):\n    count = 0\n    total = 0\n    for value in values:\n        if value >= 0:\n            count += 1\n            total += value\n    return count, total\n\nprint(summarize_nonnegative(iter([3, -2, 0, 5])))\nprint(summarize_nonnegative(iter([])))\n",
+    "output": "(3, 8)\n(0, 0)\n",
+    "note": "صفر هم یک مشاهدهٔ پذیرفته‌شده است. ساخت فهرست میانی لازم نیست. ورودی این تمرین عددی و ازپیش‌معتبر فرض شده است."
+  },
+  {
+    "id": "P03",
+    "title": "مصرف‌شدن پیش‌نمایش",
+    "task": "با islice دو عنصر اول یک تکرارگر را نمایش دهید و سپس باقی‌مانده را چاپ کنید. توضیح دهید چرا خروجی دوم همهٔ ورودی نیست.",
+    "code": "from itertools import islice\nsource = iter([10, 20, 30, 40])\nprint(list(islice(source, 2)))\nprint(list(source))\n",
+    "output": "[10, 20]\n[30, 40]\n",
+    "note": "پیش‌نمایش همین منبع را مصرف کرده است. برای بازپخش به سیاست ذخیره‌سازی یا بازکردن دوبارهٔ منبع نیاز داریم."
+  },
+  {
+    "id": "P04",
+    "title": "مولد تبدیل مقیاس",
+    "task": "تابع مولد scale را بنویسید که هر ورودی را در factor ضرب کند. یک مولد تازه برای هر اجرای مستقل بسازید.",
+    "code": "def scale(values, factor):\n    for value in values:\n        yield value * factor\n\nprint(list(scale([1, 2, 3], 10)))\nprint(list(scale([], 10)))\n",
+    "output": "[10, 20, 30]\n[]\n",
+    "note": "آرگومان factor عدد است و در فراخوانی به پارامتر محلی متصل می‌شود. این نکته به معنای کپی مستقل هر شیء تغییرپذیر احتمالی نیست."
+  },
+  {
+    "id": "P05",
+    "title": "اندازهٔ دسته و زمان خطا",
+    "task": "نسخه‌ای از chunks بسازید که size نامعتبر را در همان فراخوانی رد کند، نه هنگام next. از تابع معمولی و مولد داخلی استفاده کنید.",
+    "code": "from itertools import islice\n\ndef chunks(values, size):\n    if type(size) is not int or size <= 0:\n        raise ValueError(\"size must be a positive integer\")\n    def generate():\n        source = iter(values)\n        while True:\n            batch = tuple(islice(source, size))\n            if not batch:\n                return\n            yield batch\n    return generate()\n\nprint(list(chunks(range(5), 2)))\ntry:\n    chunks([], 0)\nexcept ValueError:\n    print(\"rejected at call\")\n",
+    "output": "[(0, 1), (2, 3), (4,)]\nrejected at call\n",
+    "note": "تابع بیرونی yield ندارد و بدنه‌اش فوراً اجرا می‌شود. این پاسخ آموزش تفصیلیِ مدیریت خطا نیست؛ فصل یازدهم به آن اختصاص دارد."
+  },
+  {
+    "id": "P06",
+    "title": "گروه‌های متوالی و گروه‌های کلی",
+    "task": "برای A، B، A هم گروه‌های متوالی و هم جمع شمارش کل را بسازید. انتظارها را پیش از اجرا بنویسید.",
+    "code": "from collections import Counter\nfrom itertools import groupby\nvalues = [\"A\", \"B\", \"A\"]\nprint([(key, len(list(group))) for key, group in groupby(values)])\nprint(sorted(Counter(values).items()))\n",
+    "output": "[('A', 1), ('B', 1), ('A', 1)]\n[('A', 2), ('B', 1)]\n",
+    "note": "سه گروه متوالی داریم ولی فقط دو کلید متمایز. این دو خروجی به دو سؤال متفاوت پاسخ می‌دهند."
+  },
+  {
+    "id": "P07",
+    "title": "انبارهٔ جمع به تفکیک دسته",
+    "task": "زوج‌های دسته و مبلغ را در یک گذر جمع کنید. خروجی را بر اساس نام دسته مرتب کنید و ورودی را list نکنید.",
+    "code": "from collections import defaultdict\n\ndef totals_by_category(rows):\n    totals = defaultdict(int)\n    for category, amount in rows:\n        totals[category] += amount\n    return sorted(totals.items())\n\nprint(totals_by_category(iter([(\"B\", 5), (\"A\", 2), (\"B\", 3)])))\n",
+    "output": "[('A', 2), ('B', 8)]\n",
+    "note": "حافظه به تعداد دسته‌های متمایز وابسته است. مرتب‌سازی اینجا روی خروجی تجمیع‌شده است، نه همهٔ رکوردهای خام."
+  },
+  {
+    "id": "P08",
+    "title": "ویژگی مستقل برای هر نمونه",
+    "task": "کلاس Notebook با فهرست notes مستقل برای هر نمونه بسازید. تغییر نمونهٔ اول نباید یادداشت نمونهٔ دوم را عوض کند.",
+    "code": "class Notebook:\n    def __init__(self, name):\n        self.name = name\n        self.notes = []\n\nfirst = Notebook(\"first\")\nsecond = Notebook(\"second\")\nfirst.notes.append(\"checked\")\nprint(first.notes)\nprint(second.notes)\n",
+    "output": "['checked']\n[]\n",
+    "note": "فهرست در هر فراخوانی __init__ ساخته می‌شود. نام این کلاس تمرینی به نرم‌افزار Jupyter اشارهٔ فنی ندارد."
+  },
+  {
+    "id": "P09",
+    "title": "شیء با قرارداد ساده",
+    "task": "کلاس Batch با tested و rejected بسازید. فقط int واقعی، مقادیر نامنفی و rejected کوچک‌تر یا مساوی tested پذیرفته شوند. نرخ در tested صفر، None باشد.",
+    "code": "class Batch:\n    def __init__(self, tested, rejected):\n        if type(tested) is not int or type(rejected) is not int:\n            raise ValueError(\"counts must be integers\")\n        if not 0 <= rejected <= tested:\n            raise ValueError(\"invalid counts\")\n        self.tested = tested\n        self.rejected = rejected\n\n    def rejection_rate(self):\n        return self.rejected / self.tested if self.tested else None\n\nprint(Batch(100, 3).rejection_rate())\nprint(Batch(0, 0).rejection_rate())\n",
+    "output": "0.03\nNone\n",
+    "note": "این قرارداد در سازنده بررسی می‌شود. انتساب مستقیم بعدی هنوز می‌تواند آن را بشکند؛ برای حفظ دائمی invariant طراحی بیشتری لازم است. bool عمداً به‌عنوان شمارش پذیرفته نشده است."
+  },
+  {
+    "id": "P10",
+    "title": "مبلغ ساختاریافته با dataclass",
+    "task": "یک dataclass ساده با gross و refund تعریف کنید و retained را محاسبه کنید. محدودیت frozen و راهنمای نوع را توضیح دهید.",
+    "code": "from dataclasses import dataclass\n\n@dataclass(frozen=True)\nclass Amount:\n    gross: int\n    refund: int\n\n    def retained(self):\n        return self.gross - self.refund\n\nprint(Amount(1200, 200).retained())\n",
+    "output": "1000\n",
+    "note": "فیلدها اعتبار تجاری را خودکار کنترل نمی‌کنند. frozen مانع انتساب معمول می‌شود؛ مدل عمومیِ تغییرناپذیری عمیق نیست."
+  },
+  {
+    "id": "P11",
+    "title": "گزارش از مولد یک‌بارمصرف",
+    "task": "دادهٔ مرجع را با iter_orders_csv بخوانید، سپس تعداد و مبلغ باقی‌مانده را با summarize_orders گزارش کنید. مالکیت فایل را صریح ببندید.",
+    "code": "from contextlib import closing\nfrom pathlib import Path\nfrom order_report.source import iter_orders_csv\nfrom order_report.pipeline import summarize_orders\n\nwith closing(iter_orders_csv(Path(\"data\") / \"orders.csv\")) as rows:\n    report = summarize_orders(rows)\nprint(report[\"orders\"])\nprint(report[\"retained_toman\"])\n",
+    "output": "12\n3590000\n",
+    "note": "این تمرین از ریشهٔ پوشهٔ فصل اجرا می‌شود. مبلغ باقی‌مانده، سود نیست. مسیر نمونهٔ برنامهٔ اصلی به محل __file__ متکی است و از پوشهٔ کاری مستقل‌تر است."
+  },
+  {
+    "id": "P12",
+    "title": "کنترل برابری دو مسیر ورودی",
+    "task": "در محدودهٔ قرارداد، گزارش CSV جریانی را با گزارش همان رکوردها از JSON مقایسه کنید. آیا برابری گزارش به‌تنهایی برابری رکوردها را ثابت می‌کند؟",
+    "code": "import json\nfrom contextlib import closing\nfrom pathlib import Path\nfrom order_report.source import iter_orders_csv\nfrom order_report.pipeline import summarize_orders\n\nexpected_rows = json.loads(Path(\"data/orders.json\").read_text(encoding=\"utf-8\"))\nwith closing(iter_orders_csv(\"data/orders.csv\")) as rows:\n    actual_rows = list(rows)\nprint(actual_rows == expected_rows)\nprint(summarize_orders(iter(actual_rows)) == summarize_orders(iter(expected_rows)))\n",
+    "output": "True\nTrue\n",
+    "note": "materialize کردن در این آزمون کوچک عمدی است و ادعای حافظهٔ کم ندارد. مقایسهٔ رکوردها جدا انجام شده چون برابری تجمیع می‌تواند اختلاف رکورد را پنهان کند. JSON معمولی این پاسخ کامل در حافظه بارگذاری می‌شود."
+  }
+]
