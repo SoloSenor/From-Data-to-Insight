@@ -1,0 +1,17 @@
+{
+  "status": "PASS_WITH_SCOPE_LIMITS",
+  "renderer": "LibreOffice 7.4",
+  "rendered_pages": 39,
+  "sample_pages_visually_reviewed": [
+    1,
+    8,
+    16,
+    24,
+    32,
+    39
+  ],
+  "sample_findings": "Readable Persian text; code and output LTR and monospace; no clipping observed on sampled pages.",
+  "all_pages_visually_reviewed": false,
+  "microsoft_word_application_tested": false,
+  "pdf_role": "Temporary review preview, not guaranteed Microsoft Word pagination."
+}

@@ -1,0 +1,11 @@
+> /mnt/data/book/volume-01/chapter-11/examples/debug_demo.py(1)<module>()
+-> """Interactive only: python -m pdb examples/debug_demo.py."""
+(Pdb) Breakpoint 1 at /mnt/data/book/volume-01/chapter-11/examples/debug_demo.py:2
+(Pdb) > /mnt/data/book/volume-01/chapter-11/examples/debug_demo.py(3)retained()
+-> return quantity * price - returned
+(Pdb) 3
+(Pdb) 100
+(Pdb) 1
+(Pdb) 299
+(Pdb) 200
+(Pdb) 
