@@ -1,0 +1,242 @@
+[
+  {
+    "id": "C01",
+    "title": "خطای نحوی، پیش از اجرای بدنه",
+    "before": "وقتی یک دونقطه جا افتاده است، مفسر هنوز به اجرای آن قطعه نرسیده است. برای آنکه دفترچهٔ سالم متوقف نشود، متن ناسالم را به compile می‌دهیم؛ خودِ سلول از نظر نحوی معتبر است.",
+    "code": "try:\n    compile(\"if True print('ready')\", \"broken_sample.py\", \"exec\")\nexcept SyntaxError as exc:\n    print(type(exc).__name__)\n    print(exc.lineno)",
+    "output": "SyntaxError\n1\n",
+    "after": "SyntaxError می‌تواند هنگام import یا compile نیز ایجاد شود. خط و پیکان محل تشخیص‌اند، نه تضمین اینکه علت دقیقاً همان نویسه است؛ پرانتز باز در خط قبل هم می‌تواند عامل باشد."
+  },
+  {
+    "id": "C02",
+    "title": "دسته‌بندی خطای زمان اجرا",
+    "before": "سه عملیات ظاهراً ساده، سه قرارداد متفاوت را نقض می‌کنند. نوع استثنا اطلاعات اولیهٔ خوبی دربارهٔ مسئله می‌دهد، اما جای خواندن زمینه را نمی‌گیرد.",
+    "code": "actions = [lambda: int(\"two\"), lambda: 1 / 0, lambda: {}[\"price\"]]\nfor action in actions:\n    try:\n        action()\n    except (ValueError, ZeroDivisionError, KeyError) as exc:\n        print(type(exc).__name__)",
+    "output": "ValueError\nZeroDivisionError\nKeyError\n",
+    "after": "این tuple فقط برای نمایش چند نوع خطای شناخته‌شده است. در برنامهٔ واقعی ممکن است واکنش مناسب به هر نوع متفاوت باشد. هیچ‌یک از این خطاها را صرفاً برای ادامهٔ برنامه به صفر تبدیل نمی‌کنیم."
+  },
+  {
+    "id": "C03",
+    "title": "خطای منطقی بدون هیچ استثنا",
+    "before": "سفارش سه قلم کالا با قیمت ۱۰۰ و یک قلم برگشتی را در نظر بگیرید. پاسخ دستی ۲۰۰ است؛ کم‌کردن تعداد از مبلغ از نظر واحد نیز نادرست است.",
+    "code": "def wrong_retained(quantity, price, returned):\n    return quantity * price - returned\n\nactual = wrong_retained(3, 100, 1)\nprint(actual)\nprint(actual == 200)",
+    "output": "299\nFalse\n",
+    "after": "اجرای موفق فقط ثابت می‌کند برنامه به مانع اجرایی نخورده است. مشاهدهٔ ۲۹۹ شاهد خطای فرمول است؛ آزمون مرجع و بررسی واحدها آن را آشکار می‌کند. این تابع عمداً غلط است و وارد پروژهٔ سالم نمی‌شود."
+  },
+  {
+    "id": "C04",
+    "title": "خواندن مسیر فراخوانی",
+    "before": "برای حذف تفاوت مسیر و شماره‌خط محیط‌ها، تنها نام دو قاب آخر و نوع خطا را چاپ می‌کنیم. traceback کامل برای تشخیص واقعی حفظ می‌شود.",
+    "code": "import traceback\n\ndef divide(total, count):\n    return total / count\n\ndef report():\n    return divide(100, 0)\n\ntry:\n    report()\nexcept ZeroDivisionError as exc:\n    frames = traceback.extract_tb(exc.__traceback__)\n    print([frame.name for frame in frames[-2:]])\n    print(type(exc).__name__)",
+    "output": "['report', 'divide']\nZeroDivisionError\n",
+    "after": "آخرین قاب معمولاً محل وقوع مستقیم است؛ قاب قبلی می‌گوید ورودی نامعتبر از کجا آمده است. در گزارش زنجیره‌ای، بخش علت و بخش استثنای بیرونی را جدا بخوانید. شماره‌خط‌ها پس از ویرایش می‌توانند تغییر کنند."
+  },
+  {
+    "id": "C05",
+    "title": "مشاهدهٔ مقدار با repr و type",
+    "before": "دو مقدار ممکن است روی صفحه شبیه هم به نظر برسند، اما فاصلهٔ پنهان یا نوعشان فرق کند. پیش از هر تبدیل، فرضیه را با مشاهدهٔ محدود بررسی کنید.",
+    "code": "value = \" 12 \"\nprint(repr(value))\nprint(type(value).__name__)\nprint(len(value))",
+    "output": "' 12 '\nstr\n4\n",
+    "after": "repr برای دیدن فاصله و escape مناسب است، ولی مجوز چاپ دادهٔ حساس نیست. در پروژهٔ این فصل، پیام عمومی فقط شمارهٔ رکورد، نام فیلد و کد خطا دارد؛ متن خام مشتری یا مسیر در پیام عادی افشا نمی‌شود."
+  },
+  {
+    "id": "C06",
+    "title": "بازتولید کمینه و اصلاح فرمول",
+    "before": "پیش از سراغ گرفتن کل CSV، خطای فرمول را با یک تابع و سه عدد بازتولید کنید. کوچک‌کردن ورودی باید ویژگی مولد خطا را حفظ کند.",
+    "code": "def retained(quantity, price, returned):\n    return (quantity - returned) * price\n\nprint(retained(3, 100, 1))\nprint(retained(3, 100, 0))\nprint(retained(3, 100, 3))",
+    "output": "200\n300\n0\n",
+    "after": "سه حالت عادی، بدون برگشت و برگشت کامل، سه شاهد متمایزند. هنوز ورودی منفی یا تعداد اعشاری را کنترل نکرده‌ایم؛ مرز مسئولیت تابع باید صریح باشد، نه اینکه از نتیجهٔ این سه اجرا اعتبار همهٔ ورودی‌ها را نتیجه بگیریم."
+  },
+  {
+    "id": "C07",
+    "title": "گرفتن استثنای مشخص",
+    "before": "تبدیل متن نامعتبر به عدد یک شکست قابل‌انتظار است. محدودهٔ try را کوچک نگه می‌داریم تا خطای بخش دیگری را اشتباه به کاربر نسبت ندهیم.",
+    "code": "def parse_count(text):\n    try:\n        return int(text)\n    except ValueError:\n        return None\n\nprint(parse_count(\"12\"))\nprint(parse_count(\"twelve\"))",
+    "output": "12\nNone\n",
+    "after": "None در این تابع یک قرارداد صریح برای شکست تبدیل است، نه مقدار صفر. TypeError عمداً گرفته نمی‌شود؛ اگر فراخواننده list بفرستد، نقص قرارداد نباید پنهان شود. در پروژهٔ اصلی به‌جای این sentinel، استثنای دامنه با زمینه داریم."
+  },
+  {
+    "id": "C08",
+    "title": "ترتیب handlerها از خاص به عام",
+    "before": "کلاس FileNotFoundError زیرمجموعهٔ OSError است. نخستین handler منطبق انتخاب می‌شود؛ بنابراین handler عمومی‌تر باید پایین‌تر باشد.",
+    "code": "try:\n    raise FileNotFoundError(\"missing input\")\nexcept FileNotFoundError:\n    print(\"missing file\")\nexcept OSError:\n    print(\"other io failure\")",
+    "output": "missing file\n",
+    "after": "این مثال خطا را عمداً می‌سازد تا به فایل‌سیستم وابسته نباشد. ترتیب معکوس از نظر نحوی معتبر است، اما پیام اختصاصی فایل گمشده هرگز انتخاب نمی‌شود. Exception نیز همهٔ زیرکلاس‌های BaseException را پوشش نمی‌دهد."
+  },
+  {
+    "id": "C09",
+    "title": "else برای مسیر موفق",
+    "before": "else فقط زمانی اجرا می‌شود که try بدون استثنا تمام شده باشد. این ابزار دامنهٔ گرفتن خطا را محدودتر و خواناتر می‌کند.",
+    "code": "for text in (\"4\", \"bad\"):\n    try:\n        count = int(text)\n    except ValueError:\n        print(\"invalid count\")\n    else:\n        print(\"accepted\", count)",
+    "output": "accepted 4\ninvalid count\n",
+    "after": "استثنایی که در خود else ایجاد شود توسط exceptهای همین try گرفته نمی‌شود. این تفاوت مفید است: خرابی قالب‌بندی یا محاسبه را با شکست تبدیل ورودی یکی نمی‌کنیم."
+  },
+  {
+    "id": "C10",
+    "title": "finally برای پاک‌سازی، نه ساخت پاسخ",
+    "before": "در مسیر مدیریت‌شدهٔ پایتون، finally چه پس از موفقیت و چه هنگام انتشار استثنا اجرا می‌شود. اثر آن را با فهرست رویدادها می‌بینیم.",
+    "code": "events = []\ntry:\n    try:\n        events.append(\"start\")\n        raise ValueError(\"invalid input\")\n    finally:\n        events.append(\"cleanup\")\nexcept ValueError:\n    events.append(\"handled\")\nprint(events)",
+    "output": "['start', 'cleanup', 'handled']\n",
+    "after": "این تضمین را به قطع برق، kill اجباری فرایند یا خرابی مفسر تعمیم ندهید. return یا استثنای تازه در finally می‌تواند نتیجه یا خطای قبلی را بپوشاند؛ برای آزادسازی فایل معمولاً with روشن‌تر است."
+  },
+  {
+    "id": "C11",
+    "title": "اعتبارسنجی صریح با raise",
+    "before": "مرز ورودی باید حتی با فعال‌بودن بهینه‌سازی هم برقرار بماند. bool را نیز جدا می‌کنیم، چون isinstance(True, int) درست است ولی تعداد قراردادی ما نیست.",
+    "code": "def require_quantity(value):\n    if type(value) is not int:\n        raise TypeError(\"quantity must be an integer\")\n    if value <= 0:\n        raise ValueError(\"quantity must be positive\")\n    return value\n\nfor value in (3, 0, True):\n    try:\n        print(require_quantity(value))\n    except (TypeError, ValueError) as exc:\n        print(type(exc).__name__)",
+    "output": "3\nValueError\nTypeError\n",
+    "after": "انتخاب نوع استثنا بخشی از API است. در این تابع آموزشی نوع و دامنه را جدا کرده‌ایم؛ در پروژهٔ گزارش، هر دو زیر یک DataContractError شناخته‌شده به مرز برنامه می‌رسند. هیچ‌کدام را با assert برای ورودی کاربر جایگزین نمی‌کنیم."
+  },
+  {
+    "id": "C12",
+    "title": "استثنای اختصاصی دامنه",
+    "before": "استثنای اختصاصی به مرز برنامه اجازه می‌دهد خطای داده را از باگ محاسبه تشخیص دهد. برای این نیاز، وراثت کوچک کافی است و به سلسله‌مراتب پیچیده نیاز نداریم.",
+    "code": "class DataContractError(ValueError):\n    pass\n\ntry:\n    raise DataContractError(\"invalid_quantity record=2\")\nexcept DataContractError as exc:\n    print(type(exc).__name__)\n    print(str(exc))",
+    "output": "DataContractError\ninvalid_quantity record=2\n",
+    "after": "زیرکلاس‌بودن از ValueError یک تصمیم قراردادی است. صرف نام اختصاصی، معنای خطا را تضمین نمی‌کند؛ فقط خطاهای قابل‌انتظار ورودی را به این نوع تبدیل می‌کنیم و خطاهای برنامه‌نویسی را زیر آن پنهان نمی‌کنیم."
+  },
+  {
+    "id": "C13",
+    "title": "افزودن زمینه با زنجیرهٔ استثنا",
+    "before": "شمارهٔ رکورد برای اصلاح داده لازم است، اما نباید علت اولیهٔ تبدیل عدد را دور بریزیم. raise ... from ... این رابطه را آشکار می‌کند.",
+    "code": "class DataContractError(ValueError):\n    pass\n\ndef parse_quantity(text):\n    try:\n        return int(text)\n    except ValueError as exc:\n        raise DataContractError(\"invalid_integer record=2 field=quantity\") from exc\n\ntry:\n    parse_quantity(\"bad\")\nexcept DataContractError as exc:\n    print(str(exc))\n    print(type(exc.__cause__).__name__)",
+    "output": "invalid_integer record=2 field=quantity\nValueError\n",
+    "after": "پیام بیرونی متن خام را چاپ نمی‌کند، اما traceback اشکال‌زدایی ممکن است پیام علت اولیه را نشان دهد. بنابراین --debug برای محیط کنترل‌شده است؛ حذف داده از پیام عمومی به معنی پاک‌بودن همهٔ لاگ‌ها و زنجیره‌ها نیست."
+  },
+  {
+    "id": "C14",
+    "title": "انتشار دوباره با raise تنها",
+    "before": "گاهی لایهٔ میانی فقط باید رویداد را ثبت و همان شکست را منتشر کند. بازگرداندن صفر در این نقطه، نتیجهٔ نامعتبر را ظاهراً موفق جلوه می‌دهد.",
+    "code": "events = []\ndef middle():\n    try:\n        int(\"bad\")\n    except ValueError:\n        events.append(\"observed\")\n        raise\n\ntry:\n    middle()\nexcept ValueError:\n    print(events)\n    print(\"still failed\")",
+    "output": "['observed']\nstill failed\n",
+    "after": "raise تنها در handler، استثنای فعال را دوباره منتشر می‌کند. raise exc می‌تواند قاب اضافیِ محل raise را به traceback اضافه کند. ثبت چندبارهٔ یک traceback در همهٔ لایه‌ها معمولاً لاگ را شلوغ می‌کند؛ مالک ثبت نهایی را تعیین کنید."
+  },
+  {
+    "id": "C15",
+    "title": "بستن منبع در مسیر شکست",
+    "before": "مدیریت منبع به مسیر موفق محدود نیست. این مثال با فایل موقت، بسته‌شدن handle پس از استثنا را بدون اتکا به زمان جمع‌آوری زباله نشان می‌دهد.",
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\n\nwith TemporaryDirectory() as directory:\n    path = Path(directory) / \"sample.txt\"\n    path.write_text(\"ready\", encoding=\"ascii\")\n    try:\n        with path.open(encoding=\"ascii\") as source:\n            raise ValueError(\"stop reading\")\n    except ValueError:\n        print(source.closed)",
+    "output": "True\n",
+    "after": "with تضمین می‌کند مسیر خروج معمول یا استثنایی از بلوک، متد خروج منبع را فراخوانی کند. این با تضمین موفقیت پاک‌سازی در هر خرابی سیستم یکی نیست. برای مولد فایل‌دار فصل دهم، مالکِ مصرف از closing استفاده می‌کند."
+  },
+  {
+    "id": "C16",
+    "title": "assert برای فرض داخلی",
+    "before": "assert ابزار بیان فرض توسعه‌دهنده است؛ اگر شرط برقرار نباشد AssertionError ایجاد می‌کند. اینجا دادهٔ داخلی و شناخته‌شده را بررسی می‌کنیم.",
+    "code": "gross = 300\nrefund = 100\nretained = 200\nassert gross - refund == retained, \"balance mismatch\"\nprint(\"balance checked\")",
+    "output": "balance checked\n",
+    "after": "پیام باید فرض نقض‌شده را توضیح دهد، نه دادهٔ حساس را. assert قرارداد امنیتی، اعتبارسنجی ورودی کاربر یا جایگزین مدیریت استثنا نیست؛ مثال بعد دلیل اجرایی این مرز را نشان می‌دهد."
+  },
+  {
+    "id": "C17",
+    "title": "چرا assert مرز ورودی نیست",
+    "before": "همان برنامهٔ کوچک را در دو مفسر فرزند اجرا می‌کنیم. تغییر پرچم بهینه‌سازی، شاهدی واقعی و مستقل از تنظیم کرنل فعلی به دست می‌دهد.",
+    "code": "import subprocess\nimport sys\n\ncode = \"assert False, 'blocked'; print('continued')\"\nnormal = subprocess.run([sys.executable, \"-c\", code], capture_output=True, text=True)\noptimized = subprocess.run([sys.executable, \"-O\", \"-c\", code], capture_output=True, text=True)\nprint(normal.returncode != 0)\nprint(optimized.returncode)\nprint(optimized.stdout.strip())",
+    "output": "True\n0\ncontinued\n",
+    "after": "با -O دستور assert حذف می‌شود؛ به عبارت شرط و پیام آن نیز برای اثر جانبی تکیه نکنید. برای کنترل‌هایی که باید در انتشار برقرار بمانند، if و raise بنویسید. متدهای assertEqual و assertRaises در unittest دستور assert زبان نیستند."
+  },
+  {
+    "id": "C18",
+    "title": "الگوی آماده‌سازی، اقدام، بررسی",
+    "before": "آزمون را با سه مرحلهٔ Arrange، Act و Assert می‌خوانیم. مقدار مورد انتظار را از محاسبهٔ دستی تعیین می‌کنیم، نه با فراخوانی دوبارهٔ تابع تحت آزمون.",
+    "code": "def retained(quantity, price, returned):\n    return (quantity - returned) * price\n\nquantity, price, returned = 3, 100, 1\nexpected = 200\nactual = retained(quantity, price, returned)\nprint(actual == expected)",
+    "output": "True\n",
+    "after": "این print برای نمایش ساختار است؛ در مجموعه‌آزمون باید شکست به test runner اعلام شود، نه اینکه فقط False چاپ شود. در مثال بعد runner واقعی داریم. اگر oracle همان فرمول اشتباه را کپی کند، آزمون هم همان اشتباه را تأیید می‌کند."
+  },
+  {
+    "id": "C19",
+    "title": "اولین TestCase واقعی",
+    "before": "unittest همراه پایتون است. نام متد آزمون با test شروع می‌شود و runner نتیجه را ثبت می‌کند؛ خروجی زمان‌دار runner را در بافر نگه می‌داریم تا مثال خروجی پایدار داشته باشد.",
+    "code": "import io\nimport unittest\n\ndef retained(quantity, price, returned):\n    return (quantity - returned) * price\n\nclass RetainedTests(unittest.TestCase):\n    def test_partial_return(self):\n        self.assertEqual(retained(3, 100, 1), 200)\n\nsuite = unittest.defaultTestLoader.loadTestsFromTestCase(RetainedTests)\nresult = unittest.TextTestRunner(stream=io.StringIO()).run(suite)\nprint(result.testsRun)\nprint(result.wasSuccessful())",
+    "output": "1\nTrue\n",
+    "after": "در فایل واقعی، unittest.main یا discovery نتیجه را به ترمینال و کد خروج منتقل می‌کند. درون دفترچه بدون مدیریت argv از unittest.main استفاده نکنید؛ پارامترهای کرنل می‌توانند با پارامترهای runner تداخل کنند."
+  },
+  {
+    "id": "C20",
+    "title": "آزمودن شکست مورد انتظار",
+    "before": "فقط تست پاسخ سالم کافی نیست؛ تابع باید ورودی نامعتبر را با نوع و پیام قراردادی رد کند. بدنهٔ assertRaisesRegex را تا حد امکان کوچک می‌گیریم.",
+    "code": "import io\nimport unittest\n\ndef require_positive(value):\n    if value <= 0:\n        raise ValueError(\"quantity must be positive\")\n    return value\n\nclass ValidationTests(unittest.TestCase):\n    def test_zero_is_rejected(self):\n        with self.assertRaisesRegex(ValueError, \"positive\"):\n            require_positive(0)\n\nsuite = unittest.defaultTestLoader.loadTestsFromTestCase(ValidationTests)\nresult = unittest.TextTestRunner(stream=io.StringIO()).run(suite)\nprint(result.wasSuccessful())",
+    "output": "True\n",
+    "after": "Regex کل پیام را لزوماً برابر نمی‌گیرد. برای پیام دارای شناسهٔ پایدار، می‌توان ویژگی exc.code را جدا آزمود؛ به متن طولانی و نسخه‌وابستهٔ پیام داخلی Python تکیه نکنید. گرفتن هر Exception در آزمون بیش از حد سست است."
+  },
+  {
+    "id": "C21",
+    "title": "مرزها با subTest",
+    "before": "ورودی مرزی از دل قرارداد می‌آید: بدون برگشت، برگشت جزئی، برگشت کامل و قیمت صفر. هر ردیف یک انتظار مستقل دارد.",
+    "code": "import io\nimport unittest\n\nclass BoundaryTests(unittest.TestCase):\n    def test_cases(self):\n        cases = [(3, 100, 0, 300), (3, 100, 1, 200),\n                 (3, 100, 3, 0), (3, 0, 1, 0)]\n        for quantity, price, returned, expected in cases:\n            with self.subTest(quantity=quantity, returned=returned):\n                self.assertEqual((quantity - returned) * price, expected)\n\nsuite = unittest.defaultTestLoader.loadTestsFromTestCase(BoundaryTests)\nresult = unittest.TextTestRunner(stream=io.StringIO()).run(suite)\nprint(result.testsRun)\nprint(result.wasSuccessful())",
+    "output": "1\nTrue\n",
+    "after": "testsRun تعداد متد آزمون را می‌شمارد؛ چهار subTest را نباید چهار آزمون مستقل در گزارش runner اعلام کرد. subTest باعث می‌شود شکست یک مورد، مانع بررسی باقی ردیف‌های همان حلقه نشود."
+  },
+  {
+    "id": "C22",
+    "title": "fixture تازه و پاک‌سازی ثبت‌شده",
+    "before": "آزمون خوب از فایل شخصی یا پوشهٔ اجرای فعلی مستقل است. برای منابع موقت، پاک‌سازی را بلافاصله پس از ساخت ثبت می‌کنیم.",
+    "code": "import io\nfrom pathlib import Path\nfrom tempfile import TemporaryDirectory\nimport unittest\n\nclass FileTests(unittest.TestCase):\n    def setUp(self):\n        self.directory = TemporaryDirectory()\n        self.addCleanup(self.directory.cleanup)\n        self.path = Path(self.directory.name) / \"data.txt\"\n\n    def test_roundtrip(self):\n        self.path.write_text(\"ready\", encoding=\"ascii\")\n        self.assertEqual(self.path.read_text(encoding=\"ascii\"), \"ready\")\n\nsuite = unittest.defaultTestLoader.loadTestsFromTestCase(FileTests)\nresult = unittest.TextTestRunner(stream=io.StringIO()).run(suite)\nprint(result.wasSuccessful())",
+    "output": "True\n",
+    "after": "در unittest، setUp برای هر متد آزمون اجرا می‌شود. اگر پس از ثبت addCleanup بخشی از setUp شکست بخورد، پاک‌سازی ثبت‌شده همچنان اجرا می‌شود؛ tearDown برای setUp ناموفق اجرا نمی‌شود. این تفاوت برای مدیریت منابع مهم است."
+  },
+  {
+    "id": "C23",
+    "title": "آزمون بازگشت برای یک باگ کشف‌شده",
+    "before": "قبل از اصلاح، آزمون باید شکست معنی‌دار نشان دهد؛ بعد از اصلاح باید موفق شود. اینجا یک آزمون یکسان را روی دو پیاده‌سازی اجرا می‌کنیم.",
+    "code": "import io\nimport unittest\n\ndef check_function(function):\n    class RegressionTest(unittest.TestCase):\n        def test_partial_return(self):\n            self.assertEqual(function(3, 100, 1), 200)\n    suite = unittest.defaultTestLoader.loadTestsFromTestCase(RegressionTest)\n    result = unittest.TextTestRunner(stream=io.StringIO()).run(suite)\n    return result.wasSuccessful()\n\nprint(check_function(lambda q, p, r: q * p - r))\nprint(check_function(lambda q, p, r: (q - r) * p))",
+    "output": "False\nTrue\n",
+    "after": "شکست اول عمدی و مهارشده است و کل سلول را شکست‌خورده نمی‌کند. اگر هر دو True می‌شدند، آزمون قدرت آشکارسازی این باگ را نداشت. یک باگ، یک آزمون بازگشت قابل‌فهم؛ بعداً می‌توان دامنهٔ حالت‌ها را گسترش داد."
+  },
+  {
+    "id": "C24",
+    "title": "مقایسهٔ تقریبی با معیار روشن",
+    "before": "عددهای ممیز شناور نمایش دقیق همهٔ اعشار را ندارند. برای سهم یا نسبت، دامنه و تلورانس را صریح می‌کنیم؛ مبلغ صحیح تومان همچنان با برابری دقیق سنجیده می‌شود.",
+    "code": "import math\nvalue = 0.1 + 0.2\nprint(value == 0.3)\nprint(math.isclose(value, 0.3, rel_tol=1e-12, abs_tol=1e-12))",
+    "output": "False\nTrue\n",
+    "after": "isclose برابری ریاضی نیست. آزمون نزدیکی باید علاوه بر واحد، مقیاس و معنای خطا را مشخص کند. بزرگ‌گرفتن بی‌دلیل تلورانس می‌تواند یک باگ واقعی را مخفی کند؛ قرار نیست هر اختلافی را به گردن float بیندازیم."
+  },
+  {
+    "id": "C25",
+    "title": "NaN و بی‌نهایت، بدون استثنا",
+    "before": "بعضی ورودی‌های غیرمتناهی به‌راحتی ساخته می‌شوند و ممکن است خطای زمان اجرا ندهند. برای دامنه‌ای که مقدار متناهی می‌خواهد، باید آن را صریح بررسی کرد.",
+    "code": "import math\nfor value in (1.5, float(\"nan\"), float(\"inf\")):\n    print(math.isfinite(value))\nprint(float(\"nan\") == float(\"nan\"))",
+    "output": "True\nFalse\nFalse\nFalse\n",
+    "after": "NaN حتی با خودش برابر نیست. این رفتار را با missing قراردادی یا عدد صفر یکی نکنید. پروژهٔ پولی از integer استفاده می‌کند؛ بحث این مثال برای سهم‌های float و فصل‌های محاسبات عددی بعدی است."
+  },
+  {
+    "id": "C26",
+    "title": "نزدیک صفر، تلورانس مطلق",
+    "before": "اگر مقدار مرجع صفر باشد، تلورانس نسبی به‌تنهایی معمولاً کمکی نمی‌کند. تلورانس مطلق باید در واحد کمیت تعریف شود.",
+    "code": "import math\nvalue = 1e-10\nprint(math.isclose(value, 0.0, rel_tol=1e-6))\nprint(math.isclose(value, 0.0, rel_tol=1e-6, abs_tol=1e-9))",
+    "output": "False\nTrue\n",
+    "after": "فرمول معیار، اختلاف مطلق را با بزرگ‌ترِ تلورانس مطلق و تلورانس نسبیِ مقیاس مقایسه می‌کند. ۱e-9 انتخاب آموزشی این مثال است، نه توصیهٔ عمومی برای همهٔ دستگاه‌ها و واحدها."
+  },
+  {
+    "id": "C27",
+    "title": "آزمون رابطه‌ای، افزون بر پاسخ ثابت",
+    "before": "گاهی رابطه‌ای بین چند اجرا داریم: دو برابرشدن قیمت باید مبلغ را دو برابر کند و جابه‌جایی ترتیب رکوردها نباید جمع را عوض کند.",
+    "code": "def total(rows):\n    return sum((q - r) * p for q, p, r in rows)\n\nrows = [(3, 100, 1), (2, 50, 0)]\nscaled = [(q, 2 * p, r) for q, p, r in rows]\nprint(total(rows) == total(list(reversed(rows))))\nprint(total(scaled) == 2 * total(rows))",
+    "output": "True\nTrue\n",
+    "after": "این‌ها آزمون‌های رابطه‌ای یا metamorphic هستند، نه اثبات صحت. تابعی که همیشه صفر بدهد هر دو را پاس می‌کند؛ بنابراین در کنار رابطه‌ها باید oracle عددی مستقل هم داشته باشیم. تولید تصادفی یا Hypothesis در این مثال استفاده نشده است."
+  },
+  {
+    "id": "C28",
+    "title": "تزریق وابستگی برای خطای قابل‌بازتولید",
+    "before": "برای آزمودن خطای خواندن، لازم نیست واقعاً دیسک را خراب کنیم. تابع یک reader دریافت می‌کند و در آزمون نسخهٔ ساختگیِ کنترل‌شده به آن می‌دهیم.",
+    "code": "def read_and_total(reader):\n    return sum(reader())\n\ndef failed_reader():\n    raise OSError(\"simulated read failure\")\n\ntry:\n    read_and_total(failed_reader)\nexcept OSError:\n    print(\"io failure propagated\")",
+    "output": "io failure propagated\n",
+    "after": "این تزریق خطا شاهد مسیر برخورد با شکست است، نه آزمون همهٔ رفتارهای فایل‌سیستم. در پروژهٔ نهایی علاوه بر mock مرزی، CSV واقعی در پوشهٔ موقت هم خوانده می‌شود تا آزمون واحد و یکپارچه مکمل هم باشند."
+  },
+  {
+    "id": "C29",
+    "title": "ثبت رویداد بدون آلودگی تنظیمات عمومی",
+    "before": "logging به خروجی گزارش تعلق ندارد. در این مثال logger مستقل و بافر محلی داریم؛ بنابراین اجرای دوبارهٔ سلول، handler تکراری به root logger اضافه نمی‌کند.",
+    "code": "import io\nimport logging\nbuffer = io.StringIO()\nlogger = logging.Logger(\"chapter11.example\")\nhandler = logging.StreamHandler(buffer)\nhandler.setFormatter(logging.Formatter(\"%(levelname)s %(message)s\"))\nlogger.addHandler(handler)\ntry:\n    logger.warning(\"invalid record=%s field=%s\", 2, \"quantity\")\nfinally:\n    logger.removeHandler(handler)\n    handler.close()\nprint(buffer.getvalue(), end=\"\")",
+    "output": "WARNING invalid record=2 field=quantity\n",
+    "after": "پارامترگذاری پیام از قالب‌بندی زودهنگام جلوگیری می‌کند، ولی راهکار امنیت داده نیست. logging.exception در handler traceback را هم ثبت می‌کند و ممکن است متن خام علت را افشا کند. سیاست دسترسی و نگه‌داری لاگ، جدا از صحت کد است."
+  },
+  {
+    "id": "C30",
+    "title": "آزمون یکپارچهٔ کوچک از فایل تا عدد",
+    "before": "در پایان، مرز ورودی و محاسبه را با یک فایل موقت به هم متصل می‌کنیم. دادهٔ کوچک اجازه می‌دهد انتظار را مستقل و دستی حساب کنیم.",
+    "code": "import csv\nfrom pathlib import Path\nfrom tempfile import TemporaryDirectory\n\nwith TemporaryDirectory() as directory:\n    path = Path(directory) / \"orders.csv\"\n    path.write_text(\"quantity,price,returned\\n3,100,1\\n2,50,0\\n\", encoding=\"ascii\")\n    with path.open(encoding=\"ascii\", newline=\"\") as source:\n        rows = csv.DictReader(source)\n        total = sum((int(row[\"quantity\"]) - int(row[\"returned\"]))\n                    * int(row[\"price\"]) for row in rows)\n    print(total)\n    print(total == 300)",
+    "output": "300\nTrue\n",
+    "after": "این schema سه‌ستونی فقط برای مثال مستقل است؛ جای قرارداد شش‌ستونی پروژه را نمی‌گیرد. خواندن موفق این فایل شاهد اعتبار تاریخ، یکتایی شناسه و دامنهٔ برگشت‌ها نیست؛ پروژهٔ کارگاهی این کنترل‌ها را جدا اعمال می‌کند."
+  }
+]

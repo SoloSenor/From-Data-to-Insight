@@ -1,0 +1,82 @@
+[
+  {
+    "id": "E01",
+    "title": "اشتباه نحوی در متنِ برنامه",
+    "broken_code": "compile(\"if True print('ready')\", 'broken.py', 'exec')",
+    "exception": "SyntaxError",
+    "broken_output": "",
+    "fixed_code": "if True:\n    print('ready')",
+    "fixed_output": "ready\n",
+    "explanation": "دونقطه و بلوک تورفته لازم است. متن ناسالم در رشته قرار دارد تا خود فایل آموزشی قابل import بماند. شکست compile عمداً در فرایند جدا آزموده می‌شود."
+  },
+  {
+    "id": "E02",
+    "title": "پنهان‌نکردن TypeError",
+    "broken_code": "int(['3'])",
+    "exception": "TypeError",
+    "broken_output": "",
+    "fixed_code": "value = '3'\nprint(int(value))",
+    "fixed_output": "3\n",
+    "explanation": "اینجا نوع ورودی نادرست است، نه صرفاً متن غیرعددی؛ افزودن except عمومی اصلاح قرارداد نیست. فراخواننده باید نوع درست را ارسال کند یا مرز ورودی آن را صریح رد کند."
+  },
+  {
+    "id": "E03",
+    "title": "مخرج صفر و شاخص تعریف‌نشده",
+    "broken_code": "print(0 / 0)",
+    "exception": "ZeroDivisionError",
+    "broken_output": "",
+    "fixed_code": "total = 0\nshare = None if total == 0 else 0 / total\nprint(share)",
+    "fixed_output": "None\n",
+    "explanation": "سهم در کل صفر، در قرارداد این کتاب تعریف‌نشده و None است؛ صفر درصد ادعای دیگری است. شاخص تعریف‌نشده را با خطای برنامه‌نویسی یکی نکنید."
+  },
+  {
+    "id": "E04",
+    "title": "بلعیدن باگ با except عمومی",
+    "broken_code": "def total():\n    try:\n        return missing_price * 2\n    except Exception:\n        return 0\nprint(total())",
+    "exception": null,
+    "broken_output": "0\n",
+    "fixed_code": "price = 100\nprint(price * 2)",
+    "fixed_output": "200\n",
+    "explanation": "NameError در نسخهٔ ناسالم به صفر ظاهراً معتبر تبدیل شده است. رفع نام متغیر و محدودکردن try راه‌حل است؛ صفر ساختگی، گزارش موفق نیست."
+  },
+  {
+    "id": "E05",
+    "title": "return در finally و ناپدیدشدن شکست",
+    "broken_code": "def read():\n    try:\n        raise ValueError(\"invalid input\")\n    finally:\n        return 0\nprint(read())",
+    "exception": null,
+    "broken_output": "0\n",
+    "fixed_code": "events = []\ndef read():\n    try:\n        raise ValueError(\"invalid input\")\n    finally:\n        events.append(\"cleaned\")\ntry:\n    read()\nexcept ValueError:\n    print(\"still failed\", events)",
+    "fixed_output": "still failed ['cleaned']\n",
+    "explanation": "return در finally استثنا را می‌پوشاند. finally را برای پاک‌سازی نگه دارید و اجازه دهید خطای اصلی منتشر شود. در نسخه‌های دیگر Python ممکن است هشدارهای اضافی برای این الگو وجود داشته باشد؛ محیط مرجع این فصل ۳.۱۱ است."
+  },
+  {
+    "id": "E06",
+    "title": "کنترل ورودی فقط با assert",
+    "broken_code": "import subprocess\nimport sys\ncode = \"assert 0 > 0; print('accepted')\"\nresult = subprocess.run([sys.executable, \"-O\", \"-c\", code], capture_output=True, text=True)\nprint(result.stdout.strip())",
+    "exception": null,
+    "broken_output": "accepted\n",
+    "fixed_code": "quantity = 0\ntry:\n    if quantity <= 0:\n        raise ValueError('invalid quantity')\nexcept ValueError:\n    print('blocked')",
+    "fixed_output": "blocked\n",
+    "explanation": "حذف assert در حالت -O این ورودی را عبور می‌دهد. کنترل لازم‌الاجرا باید if و raise باشد؛ تست نهایی پروژه نیز در مفسر -O اجرا می‌شود."
+  },
+  {
+    "id": "E07",
+    "title": "oracle همسان با برنامهٔ غلط",
+    "broken_code": "def wrong(q, p, r):\n    return q * p - r\nexpected = wrong(3, 100, 1)\nprint(wrong(3, 100, 1) == expected)",
+    "exception": null,
+    "broken_output": "True\n",
+    "fixed_code": "actual = 3 * 100 - 1\nexpected = 200\nprint(actual == expected)",
+    "fixed_output": "False\n",
+    "explanation": "تابع تحت آزمون نباید مرجع خودش باشد. در نسخهٔ اصلاح‌شده False نتیجهٔ مطلوبِ آشکارسازی باگ است؛ اصلاح فرمول باید بعد از آزمون شکست‌خورده انجام شود."
+  },
+  {
+    "id": "E08",
+    "title": "تلورانس بزرگ که باگ را قبول می‌کند",
+    "broken_code": "import math\nprint(math.isclose(299, 200, rel_tol=0.5))",
+    "exception": null,
+    "broken_output": "True\n",
+    "fixed_code": "actual = 299\nexpected = 200\nprint(actual == expected)",
+    "fixed_output": "False\n",
+    "explanation": "برای مبلغ صحیح تومان مقایسهٔ دقیق مناسب است. تلورانس ۵۰درصدی، باگ واضح را می‌پوشاند؛ انتخاب تلورانس باید از معنا، واحد و خطای قابل‌قبول بیاید."
+  }
+]

@@ -1,0 +1,78 @@
+[
+  {
+    "id": "P01",
+    "question": "سه تفاوت خطای نحوی، استثنای زمان اجرا و خطای منطقی را با یک مثال توضیح دهید. کدام‌یک لزوماً traceback ندارد؟",
+    "answer": "خطای نحوی هنگام تجزیه یا compile شناسایی می‌شود؛ مانند دونقطهٔ جاافتاده. تقسیم بر صفر هنگام اجرا ZeroDivisionError می‌دهد. کم‌کردن تعداد برگشتی از مبلغ یک خطای منطقی است و ممکن است هیچ traceback ندهد. تشخیص محل SyntaxError لزوماً به معنی شناسایی علت نهایی نیست."
+  },
+  {
+    "id": "P02",
+    "question": "چرا except Exception: return 0 در یک تابع گزارش‌گیری خطرناک است؟ اگر سیاست کسب‌وکار اجازهٔ رد رکورد بدهد، چه چیزی باید همراه خروجی ثبت شود؟",
+    "answer": "این الگو خطای ورودی و باگ برنامه را یکسان می‌گیرد و صفر معتبر را از شکست جدا نمی‌کند. رد رکورد فقط با سیاست صریح، شمارش ورودی و پذیرفته/ردشده، دلیل رد و محدودیت جامعهٔ گزارش قابل دفاع است. پروژهٔ این فصل fail-fast است و هیچ رکوردی را بی‌صدا حذف نمی‌کند."
+  },
+  {
+    "id": "P03",
+    "question": "آیا برابرشدن مجموع دسته‌ها با مبلغ کل، صحت واقعی داده و نبودن خطای فرمول را اثبات می‌کند؟",
+    "answer": "خیر؛ ممکن است کل و دسته‌ها با همان فرمول اشتباه تولید شده باشند. invariant تنها سازگاری داخلی را می‌سنجد. علاوه بر آن به محاسبهٔ دستی، oracle مستقل، تطبیق رکوردها و شواهد بیرونی نیاز داریم. درست‌بودن حسابداری داخلی با حقیقت معامله یا کامل‌بودن داده یکی نیست."
+  },
+  {
+    "id": "P04",
+    "question": "چهار subTest در یک متد آزمون اجرا شده‌اند. runner مقدار testsRun برابر ۱ دارد. گزارش درست چیست؟ و چرا assertEqual با دستور assert یکی نیست؟",
+    "answer": "گزارش درست: یک متد آزمون با چهار مورد زیرآزمون. testsRun واحد شمارش runner را نشان می‌دهد. assertEqual یک متد unittest است و با -O حذف نمی‌شود؛ دستور assert زبان می‌تواند حذف شود. تکیه بر دستور assert برای اعتبارسنجی ورودی نادرست است."
+  },
+  {
+    "id": "P05",
+    "question": "تابعی بنویسید که فقط متن یک عدد صحیح مثبت را بپذیرد؛ برای متن غیرعددی، صفر و ورودی غیررشته شکست مشخص بدهد.",
+    "answer": "ابتدا نوع را جدا می‌کنیم تا تبدیل عددیِ ضمنی یا bool پذیرفته نشود؛ سپس تبدیل و دامنه را می‌سنجیم. این قرارداد عمداً int(\" 2 \") را می‌پذیرد؛ canonical بودن متن عدد موضوع دیگری است.",
+    "code": "def parse_positive(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text required\")\n    value = int(text)\n    if value <= 0:\n        raise ValueError(\"positive integer required\")\n    return value\n\nfor value in (\"3\", \"zero\", \"0\", True):\n    try:\n        print(parse_positive(value))\n    except (TypeError, ValueError) as exc:\n        print(type(exc).__name__)",
+    "output": "3\nValueError\nValueError\nTypeError\n"
+  },
+  {
+    "id": "P06",
+    "question": "شکست تبدیل قیمت را با شمارهٔ رکورد بپیچید و علت اولیه را قابل‌آزمون نگه دارید.",
+    "answer": "پیام بیرونی بدون مقدار خام است، و __cause__ به ValueError اولیه اشاره می‌کند. در محیط debug، علت می‌تواند مقدار ورودی را نمایش دهد؛ بنابراین پیام عمومی و traceback سیاست دسترسی یکسان ندارند.",
+    "code": "class PriceError(ValueError):\n    pass\n\ndef parse_price(text, record):\n    try:\n        return int(text)\n    except ValueError as exc:\n        raise PriceError(f\"invalid_price record={record}\") from exc\n\ntry:\n    parse_price(\"bad\", 7)\nexcept PriceError as exc:\n    print(str(exc))\n    print(type(exc.__cause__).__name__)",
+    "output": "invalid_price record=7\nValueError\n"
+  },
+  {
+    "id": "P07",
+    "question": "کنترل تراز مبلغ کل را بدون assert پیاده کنید تا با -O هم برقرار بماند.",
+    "answer": "اعتبارسنجی لازم‌الاجرا با if و raise انجام می‌شود. این تراز به‌تنهایی صحت فرمول یا درست‌بودن منبع را اثبات نمی‌کند.",
+    "code": "def require_balance(gross, refund, retained):\n    if gross - refund != retained:\n        raise RuntimeError(\"balance mismatch\")\n\nrequire_balance(300, 100, 200)\nprint(\"balanced\")\ntry:\n    require_balance(300, 100, 299)\nexcept RuntimeError as exc:\n    print(str(exc))",
+    "output": "balanced\nbalance mismatch\n"
+  },
+  {
+    "id": "P08",
+    "question": "برای تابع مبلغ باقی‌مانده، آزمون عادی و برگشت کامل و حالت نامعتبر بنویسید.",
+    "answer": "دو مقدار مورد انتظار دستی‌اند. نوع خطای برگشت نامعتبر نیز جزو قرارداد است. تست‌ها یک ورودی عددی ساده دارند و ادعای پوشش همهٔ نوع‌ها ندارند.",
+    "code": "import io\nimport unittest\n\ndef retained(q, p, r):\n    if not 0 <= r <= q:\n        raise ValueError(\"invalid return\")\n    return (q - r) * p\n\nclass RetainedTests(unittest.TestCase):\n    def test_partial(self):\n        self.assertEqual(retained(3, 100, 1), 200)\n    def test_full(self):\n        self.assertEqual(retained(3, 100, 3), 0)\n    def test_invalid(self):\n        with self.assertRaises(ValueError):\n            retained(3, 100, 4)\n\nresult = unittest.TextTestRunner(stream=io.StringIO()).run(\n    unittest.defaultTestLoader.loadTestsFromTestCase(RetainedTests))\nprint(result.testsRun)\nprint(result.wasSuccessful())",
+    "output": "3\nTrue\n"
+  },
+  {
+    "id": "P09",
+    "question": "برای سهمی که باید متناهی و در بازهٔ صفر تا یک باشد، پیش از مقایسهٔ تقریبی کنترل دامنه بنویسید.",
+    "answer": "isclose به‌تنهایی همهٔ قرارداد را بررسی نمی‌کند. در این تمرین bool پذیرفته نمی‌شود و غیرعددی، NaN و بی‌نهایت به‌صورت False رد می‌شوند.",
+    "code": "import math\n\ndef valid_share(value, expected):\n    return (type(value) in (int, float) and math.isfinite(value)\n            and 0 <= value <= 1\n            and math.isclose(value, expected, rel_tol=1e-12, abs_tol=1e-12))\n\nfor value in (0.1 + 0.2, float(\"nan\"), float(\"inf\"), True):\n    print(valid_share(value, 0.3))",
+    "output": "True\nFalse\nFalse\nFalse\n"
+  },
+  {
+    "id": "P10",
+    "question": "آزمونی کوچک بنویسید که بسته‌شدن فایل بعد از شکست پردازش را اثبات کند.",
+    "answer": "منبع در اختیار with است؛ متغیر source پس از خروج هنوز قابل اشاره است ولی handle بسته شده است. TemporaryDirectory از فایل‌های واقعی کاربر مستقل است.",
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\n\nwith TemporaryDirectory() as directory:\n    path = Path(directory) / \"input.txt\"\n    path.write_text(\"bad\", encoding=\"ascii\")\n    try:\n        with path.open(encoding=\"ascii\") as source:\n            int(source.read())\n    except ValueError:\n        print(source.closed)",
+    "output": "True\n"
+  },
+  {
+    "id": "P11",
+    "question": "با دو مفسر فرزند ثابت کنید که اعتبارسنجی صریح در حالت بهینه نیز باقی می‌ماند.",
+    "answer": "کد هر دو بار باید همان ValueError را بدهد. به‌جای تکیه بر متن traceback، وضعیت خروج و وجود نام استثنای قراردادی را می‌سنجیم.",
+    "code": "import subprocess\nimport sys\ncode = \"if 0 <= 0: raise ValueError('positive quantity required')\"\nfor flags in ([], [\"-O\"]):\n    result = subprocess.run([sys.executable, *flags, \"-c\", code],\n                            capture_output=True, text=True)\n    print(result.returncode != 0 and \"ValueError\" in result.stderr)",
+    "output": "True\nTrue\n"
+  },
+  {
+    "id": "P12",
+    "question": "از یک CSV موقتِ دو رکوردی، با پروژهٔ همین فصل گزارش بسازید و چهار مقدار مرجع را کنترل کنید.",
+    "answer": "این پاسخ از ریشهٔ پوشهٔ فصل اجرا می‌شود. هیچ ورودی یا خروجی مرجع را تغییر نمی‌دهد. مقدارها دستی‌اند: ناخالص ۴۰۰، برگشت ۱۰۰ و باقی‌مانده ۳۰۰.",
+    "code": "from pathlib import Path\nfrom tempfile import TemporaryDirectory\nfrom order_report import run_report\n\nwith TemporaryDirectory() as directory:\n    path = Path(directory) / \"orders.csv\"\n    path.write_text(\n        \"order_id,order_date,category,quantity,unit_price_toman,returned_quantity\\n\"\n        \"A,2024-01-01,Books,3,100,1\\n\"\n        \"B,2024-01-02,Books,2,50,0\\n\", encoding=\"ascii\")\n    report = run_report(path)\n    actual = tuple(report[key] for key in\n                   (\"orders\", \"gross_toman\", \"refund_toman\", \"retained_toman\"))\n    print(actual)\n    print(actual == (2, 400, 100, 300))",
+    "output": "(2, 400, 100, 300)\nTrue\n"
+  }
+]
